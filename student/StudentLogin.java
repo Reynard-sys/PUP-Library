@@ -17,7 +17,7 @@ public class StudentLogin {
     {
         //Student Login Frame Creation
         JFrame student = new JFrame();
-        BackgroundPanel background = new BackgroundPanel("library.jpg", 0.3f);
+        BackgroundPanel background = new BackgroundPanel("assets/library.jpg", 0.3f);
         background.setBackground(Color.WHITE);
         student.setContentPane(background);
         student.setTitle("PUP Library System/student/");
@@ -26,7 +26,7 @@ public class StudentLogin {
         student.setResizable(false);
 
         //PUP Logo
-        ImageIcon logo = new ImageIcon(new ImageIcon("pup.png").getImage().getScaledInstance(60, 60, Image.SCALE_SMOOTH));
+        ImageIcon logo = new ImageIcon(new ImageIcon("assets/pup.png").getImage().getScaledInstance(60, 60, Image.SCALE_SMOOTH));
         JLabel imageLabel = new JLabel(logo);
         imageLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 

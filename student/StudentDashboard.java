@@ -5,28 +5,32 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
-public class StudentBooks {
-    public static void studBook(JFrame studentDashboard)
+public class StudentDashboard {
+    public static void studDashboard(JFrame student)
     {
-        JFrame studentBook = new JFrame();
-        studentBook.getContentPane().setBackground(Color.decode("#f4f6f9"));
-        studentBook.setTitle("PUP Library System/student/Books/");
-        studentBook.setSize(600,600);
-        studentBook.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        studentBook.setResizable(false);
+        //Main Frame Creation
+        JFrame studentDashboard = new JFrame();
+        studentDashboard.getContentPane().setBackground(Color.decode("#f4f6f9"));
+        studentDashboard.setTitle("PUP Library System/student/Dashboard/");
+        studentDashboard.setSize(600,600);
+        studentDashboard.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        studentDashboard.setResizable(false);
 
+        //Container for logo, title, and drop menu
         JPanel headerPanel = new JPanel();
-        headerPanel.setSize(new Dimension(studentBook.getWidth(), 70));
+        headerPanel.setSize(new Dimension(studentDashboard.getWidth(), 70));
         headerPanel.setBackground(Color.WHITE);
         headerPanel.setBorder(BorderFactory.createMatteBorder(1, 0, 1, 0, Color.BLACK));
         headerPanel.setLayout(new BorderLayout());
         headerPanel.setOpaque(true);
 
-        ImageIcon logo = new ImageIcon(new ImageIcon("pup.png").getImage().getScaledInstance(54, 54, Image.SCALE_SMOOTH));
+        //PUP Icon
+        ImageIcon logo = new ImageIcon(new ImageIcon("assets/pup.png").getImage().getScaledInstance(54, 54, Image.SCALE_SMOOTH));
         JLabel imageLabel = new JLabel(logo);
         imageLabel.setBorder((BorderFactory.createEmptyBorder(8, 8, 8, 0)));
         imageLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
 
+        //Title
         JLabel title = new JLabel("PUP LIBRARY");
         title.setFont(new Font("Roboto", Font.PLAIN, 23));
         title.setForeground(Color.decode("#800201"));
@@ -34,8 +38,9 @@ public class StudentBooks {
         title.setHorizontalAlignment(SwingConstants.LEFT);
         title.setAlignmentX(Component.LEFT_ALIGNMENT);
 
+        //Creation of drop down menu
         JButton dropDown = new JButton();
-        ImageIcon icon = new ImageIcon(new ImageIcon("dropdownBlack.png").getImage().getScaledInstance(25, 25, Image.SCALE_SMOOTH));
+        ImageIcon icon = new ImageIcon(new ImageIcon("assets/dropdownBlack.png").getImage().getScaledInstance(25, 25, Image.SCALE_SMOOTH));
         dropDown.setIcon(icon);
         dropDown.setFocusPainted(false);
         dropDown.setBorderPainted(false);
@@ -44,6 +49,7 @@ public class StudentBooks {
         dropDown.setHorizontalAlignment(SwingConstants.RIGHT);
         dropDown.setAlignmentX(Component.RIGHT_ALIGNMENT);
 
+        //Creation of the pop up
         JPopupMenu menu = new JPopupMenu();
         menu.setPreferredSize(new Dimension(170, 60));
         menu.setBackground(Color.WHITE);
@@ -53,30 +59,36 @@ public class StudentBooks {
         menu.setOpaque(true);
         menu.setBorder(BorderFactory.createMatteBorder(2, 2, 2, 2, Color.decode("#800201"))); 
 
+        //Notification Item
         JMenuItem notif = new JMenuItem("Notification");
-        ImageIcon notif_icon = new ImageIcon(new ImageIcon("notification.png").getImage().getScaledInstance(25, 25, Image.SCALE_SMOOTH));
+        ImageIcon notif_icon = new ImageIcon(new ImageIcon("assets/notification.png").getImage().getScaledInstance(25, 25, Image.SCALE_SMOOTH));
         notif.setIcon(notif_icon);
         notif.setPreferredSize(new Dimension(170, 30));
 
+        //Sign out Item
         JMenuItem sign_out = new JMenuItem("Sign out");
-        ImageIcon signout_icon = new ImageIcon(new ImageIcon("logout.png").getImage().getScaledInstance(22, 22, Image.SCALE_SMOOTH));
+        ImageIcon signout_icon = new ImageIcon(new ImageIcon("assets/logout.png").getImage().getScaledInstance(22, 22, Image.SCALE_SMOOTH));
         sign_out.setIcon(signout_icon);
         sign_out.setPreferredSize(new Dimension(170, 30));
 
+        //When sign out is clicked, it will relaunch from landing page
         sign_out.addActionListener(e -> 
         {
-            studentBook.dispose(); 
+            studentDashboard.dispose(); 
             SwingUtilities.invokeLater(() -> Main.main(new String[]{}));
         });
 
+        //Black separator line between notif and sign out
         JPanel separatorPanel = new JPanel();
         separatorPanel.setPreferredSize(new Dimension(170, 1));
         separatorPanel.setBackground(Color.BLACK);
 
+        //Adding the elements to the pop up
         menu.add(notif);
         menu.add(separatorPanel);
         menu.add(sign_out);
 
+        //When drop down is clicked, pop up menu will display
         dropDown.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 menu.show(dropDown, -145, dropDown.getHeight()-20);
@@ -84,7 +96,7 @@ public class StudentBooks {
         });
 
         JLayeredPane layeredNav = new JLayeredPane();
-        layeredNav.setPreferredSize(new Dimension(500, 80));
+        layeredNav.setPreferredSize(new Dimension(600, 80));
         layeredNav.setLayout(null); 
 
         JPanel roundedNav = new JPanel()
@@ -94,8 +106,13 @@ public class StudentBooks {
                 super.paintComponent(g);
                 Graphics2D g2 = (Graphics2D) g;
                 g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
                 g2.setColor(Color.decode("#800201"));
                 g2.fillRoundRect(0, 0, 485, 53, 50, 50);
+
+                g2.setColor(Color.BLACK);
+                g2.setStroke(new BasicStroke(1));
+                g2.drawRoundRect(0, 0, 485, 53, 50, 50);
             }
         };
         roundedNav.setBounds(50, 20, 485, 53);
@@ -106,17 +123,17 @@ public class StudentBooks {
         buttonPanel.setBounds(60, 25, 460, 40);
 
 
-        buttonPanel.add(wrapButton("Dashboard", studentBook, StudentDashboard.class));
+        buttonPanel.add(wrapButton("Dashboard", studentDashboard, StudentDashboard.class));
         buttonPanel.add(createDivider());
-        buttonPanel.add(wrapButton("My Books", studentBook, StudentBooks.class));
+        buttonPanel.add(wrapButton("My Books", studentDashboard, StudentBooks.class));
         buttonPanel.add(createDivider());
-        buttonPanel.add(wrapButton("History", studentBook, StudentHistory.class));
+        buttonPanel.add(wrapButton("History", studentDashboard, StudentHistory.class));
 
         layeredNav.add(roundedNav, JLayeredPane.DEFAULT_LAYER);
         layeredNav.add(buttonPanel, JLayeredPane.PALETTE_LAYER);
 
         JPanel mainPanel = new JPanel();
-        mainPanel.setSize(new Dimension(studentBook.getWidth(), 500));
+        mainPanel.setSize(new Dimension(studentDashboard.getWidth(), 500));
         mainPanel.setBackground(Color.decode("#f4f6f9"));
         mainPanel.setLayout(new BorderLayout());
         mainPanel.setOpaque(true);
@@ -127,26 +144,26 @@ public class StudentBooks {
         headerPanel.add(title, BorderLayout.CENTER);
         headerPanel.add(dropDown, BorderLayout.EAST);
 
-        studentBook.setLayout(new BorderLayout());
-        studentBook.add(headerPanel, BorderLayout.NORTH);
-        studentBook.add(mainPanel, BorderLayout.CENTER);
-        studentBook.setLocationRelativeTo(null);
-        studentBook.setVisible(true);
+        studentDashboard.setLayout(new BorderLayout());
+        studentDashboard.add(headerPanel, BorderLayout.NORTH);
+        studentDashboard.add(mainPanel, BorderLayout.CENTER);
+        studentDashboard.setLocationRelativeTo(null);
+        studentDashboard.setVisible(true);
 
     }
 
-    private static JPanel wrapButton(String label, JFrame studentBook, Class<?> frameClass) 
+    private static JPanel wrapButton(String label, JFrame studentDashboard, Class<?> frameClass) 
     {
         JPanel wrapper = new JPanel(new BorderLayout());
         wrapper.setOpaque(false);
 
-        JButton btn = createMenuButton(label, studentBook, frameClass);
+        JButton btn = createMenuButton(label, studentDashboard, frameClass);
         wrapper.add(btn, BorderLayout.CENTER);
 
         return wrapper;
     }
 
-    private static JButton createMenuButton(String label, JFrame studentBook, Class<?> frameClass)
+    private static JButton createMenuButton(String label, JFrame studentDashboard, Class<?> frameClass)
     {
         JButton choices = new JButton(label);
         choices.setForeground(Color.WHITE);
@@ -160,17 +177,19 @@ public class StudentBooks {
         if (label == "Dashboard")
         {
             choices.setHorizontalAlignment(SwingConstants.RIGHT); 
+            choices.setForeground(Color.decode("#fede07"));
+            
         }
         else if (label == "My Books")
         {
             choices.setHorizontalAlignment(SwingConstants.CENTER); 
-            choices.setForeground(Color.decode("#fede07"));
+            
         }
         else if (label == "History")
         {
             choices.setHorizontalAlignment(SwingConstants.LEFT); 
         }
-        else if (label != "My Books")
+        else if (label != "Dashboard")
         {
             choices.addMouseListener(new MouseAdapter() 
             {
@@ -188,18 +207,21 @@ public class StudentBooks {
         
         choices.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
+        
+
         choices.addActionListener(e -> {
             try 
             {
-                if (frameClass == StudentDashboard.class)
+
+                if (frameClass == StudentBooks.class)
                 {
-                    studentBook.setVisible(false); 
-                    StudentDashboard.studDashboard(studentBook);
+                    studentDashboard.setVisible(false); 
+                    StudentBooks.studBook(studentDashboard);
                 }
                 else if (frameClass == StudentHistory.class) 
                 {
-                    studentBook.setVisible(false); 
-                    StudentHistory.studHistory(studentBook);
+                    studentDashboard.setVisible(false); 
+                    StudentHistory.studHistory(studentDashboard);
                 }
 
             } catch (Exception ex) {
@@ -227,5 +249,4 @@ public class StudentBooks {
 
         return dividerPanel;
     }
-    
 }

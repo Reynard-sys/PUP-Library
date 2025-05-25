@@ -6,6 +6,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.net.URI;
 
+
 //Method to lower opacity of background image
 class BackgroundPanel extends JPanel
 {
@@ -43,7 +44,7 @@ public class Main
     {
         //Main Frame Creation
         JFrame landing = new JFrame();
-        BackgroundPanel background = new BackgroundPanel("library.jpg", 0.3f);
+        BackgroundPanel background = new BackgroundPanel("assets/library.jpg", 0.3f);
         background.setBackground(Color.WHITE);
         landing.setContentPane(background);
         landing.setTitle("PUP Library System");
@@ -52,7 +53,7 @@ public class Main
         landing.setResizable(false);
 
         //PUP Logo
-        ImageIcon logo = new ImageIcon(new ImageIcon("pup.png").getImage().getScaledInstance(60, 60, Image.SCALE_SMOOTH));
+        ImageIcon logo = new ImageIcon(new ImageIcon("assets/pup.png").getImage().getScaledInstance(60, 60, Image.SCALE_SMOOTH));
         JLabel imageLabel = new JLabel(logo);
         imageLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 

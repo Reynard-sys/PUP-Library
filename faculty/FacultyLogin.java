@@ -16,7 +16,7 @@ public class FacultyLogin {
     {
         //Student Login Frame Creation
         JFrame faculty = new JFrame();
-        BackgroundPanel background = new BackgroundPanel("library.jpg", 0.3f);
+        BackgroundPanel background = new BackgroundPanel("assets/library.jpg", 0.3f);
         background.setBackground(Color.WHITE);
         faculty.setContentPane(background);
         faculty.setTitle("PUP Library System/faculty/");
@@ -26,7 +26,7 @@ public class FacultyLogin {
 
 
         //PUP Logo
-        ImageIcon logo = new ImageIcon(new ImageIcon("pup.png").getImage().getScaledInstance(60, 60, Image.SCALE_SMOOTH));
+        ImageIcon logo = new ImageIcon(new ImageIcon("assets/pup.png").getImage().getScaledInstance(60, 60, Image.SCALE_SMOOTH));
         JLabel imageLabel = new JLabel(logo);
         imageLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
