@@ -97,6 +97,7 @@ public class StudentDashboard {
 
         JLayeredPane layeredNav = new JLayeredPane();
         layeredNav.setPreferredSize(new Dimension(600, 80));
+        layeredNav.setBounds(0, 0, 600, 80);
         layeredNav.setLayout(null); 
 
         JPanel roundedNav = new JPanel()
@@ -132,13 +133,21 @@ public class StudentDashboard {
         layeredNav.add(roundedNav, JLayeredPane.DEFAULT_LAYER);
         layeredNav.add(buttonPanel, JLayeredPane.PALETTE_LAYER);
 
+        JPanel contentPanel = new JPanel();
+        contentPanel.setBounds(9, 90, 565, 375); // Adjusting position manually
+        contentPanel.setBackground(Color.decode("#ebebeb"));
+        contentPanel.setBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, Color.BLACK));
+  
+
         JPanel mainPanel = new JPanel();
         mainPanel.setSize(new Dimension(studentDashboard.getWidth(), 500));
         mainPanel.setBackground(Color.decode("#f4f6f9"));
         mainPanel.setLayout(new BorderLayout());
         mainPanel.setOpaque(true);
+        mainPanel.setLayout(null);
 
-        mainPanel.add(layeredNav, BorderLayout.CENTER);
+        mainPanel.add(layeredNav, BorderLayout.CENTER); 
+        mainPanel.add(contentPanel);    
 
         headerPanel.add(imageLabel, BorderLayout.WEST);
         headerPanel.add(title, BorderLayout.CENTER);
