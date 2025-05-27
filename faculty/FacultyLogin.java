@@ -164,6 +164,7 @@ public class FacultyLogin {
                 {
                     // All fields filled correctly; proceed
                     faculty.setVisible(false);
+                    FacultyDashboard.facDashboard(faculty);
                 }
             }
         });
