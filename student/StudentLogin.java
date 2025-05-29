@@ -7,6 +7,9 @@ import java.awt.event.FocusEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.net.URI;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 
 
 public class StudentLogin {
@@ -150,6 +153,8 @@ public class StudentLogin {
         {
             years[index] = String.valueOf(i);
         }
+
+        
         JComboBox<String> yearInput = new JComboBox<>(years);
         yearInput.setFont(new Font("Roboto", Font.PLAIN, 13));
         yearInput.setBackground(Color.WHITE);
@@ -157,6 +162,7 @@ public class StudentLogin {
         yearInput.setSelectedIndex(0);
         yearInput.setPreferredSize(new Dimension(150, 40));
         String year = (String) yearInput.getSelectedItem();
+
 
         Font buttonFont = new Font("Poppins", Font.PLAIN, 18);
         Dimension buttonSize = new Dimension(500, 50);
@@ -173,6 +179,9 @@ public class StudentLogin {
             public void actionPerformed(ActionEvent e)
             {
                 student_number = studentID.getText();
+                String birthdate = yearInput.getSelectedItem() + "-" +
+                   String.format("%02d", monthInput.getSelectedIndex()) + "-" +
+                   String.format("%02d", Integer.parseInt((String) dayInput.getSelectedItem()));
                 student_password = String.valueOf(password.getPassword());
 
                 boolean isPasswordPlaceholder = student_password.equals("Password");
@@ -225,6 +234,36 @@ public class StudentLogin {
                 {
                     student.setVisible(false);
                     StudentDashboard.studDashboard(student);
+
+                    try{
+                        Connection con = DBConnection.connect();
+                        if(con != null){
+                            PreparedStatement stmt = con.prepareStatement(
+                                "SELECT * FROM studentlogin WHERE username=? and birthdate=? and pass=?"
+                            );
+                            stmt.setString(1, student_number);
+                            stmt.setString(2, birthdate);
+                            stmt.setString(3, student_password);
+
+                            ResultSet rs = stmt.executeQuery();
+
+                             if (rs.next()) {
+                                JOptionPane.showMessageDialog(student, "✅ Login successful!");
+                               // TODO: Navigate to next screen or dashboard
+                             } else {
+                                  JOptionPane.showMessageDialog(student, "❌ Invalid credentials.", "Login Failed", JOptionPane.ERROR_MESSAGE);
+                             }
+
+                             rs.close();
+                             stmt.close();
+                             con.close();
+                        }else{
+                            JOptionPane.showMessageDialog(student, "🚫 Database connection failed.", "Error", JOptionPane.ERROR_MESSAGE);
+                        }
+                    }catch(Exception ex) {
+                        ex.printStackTrace();
+                        JOptionPane.showMessageDialog(student, "⚠️ An error occurred.", "Error", JOptionPane.ERROR_MESSAGE);
+                    }
                 }
             }
         });
