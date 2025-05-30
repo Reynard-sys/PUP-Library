@@ -7,6 +7,9 @@ import java.awt.event.FocusEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.net.URI;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 
 
 public class FacultyLogin {
@@ -133,7 +136,7 @@ public class FacultyLogin {
                 boolean idEmpty = faculty_user.isEmpty() || isIDPlaceholder;
                 boolean passwordEmpty = faculty_password.isEmpty() || isPasswordPlaceholder;
 
-                if (idEmpty && passwordEmpty) 
+                if (idEmpty && passwordEmpty)
                 {
                     JOptionPane.showMessageDialog
                     (
@@ -141,8 +144,8 @@ public class FacultyLogin {
                         "The Username field is required.\n\nThe Password field is required.",
                         "Alert!", JOptionPane.ERROR_MESSAGE
                     );
-                } 
-                else if (idEmpty) 
+                }
+                else if (idEmpty)
                 {
                     JOptionPane.showMessageDialog
                     (
@@ -150,8 +153,8 @@ public class FacultyLogin {
                         "The Username field is required.",
                         "Alert!", JOptionPane.ERROR_MESSAGE
                     );
-                } 
-                else if (passwordEmpty) 
+                }
+                else if (passwordEmpty)
                 {
                     JOptionPane.showMessageDialog
                     (
@@ -159,12 +162,39 @@ public class FacultyLogin {
                         "The Password field is required.",
                         "Alert!", JOptionPane.ERROR_MESSAGE
                     );
-                } 
-                else 
+                }
+                else
                 {
                     // All fields filled correctly; proceed
-                    faculty.setVisible(false);
-                    FacultyDashboard.facDashboard(faculty);
+                    try{
+                        Connection con = DBConnection.connect();
+                        if(con != null){
+                            PreparedStatement stmt = con.prepareStatement(
+                                "SELECT * FROM faculty_login WHERE username=? and pass=?"
+                            );
+                            stmt.setString(1, faculty_user);
+                            stmt.setString(2, faculty_password);
+
+                            ResultSet rs = stmt.executeQuery();
+
+                            if (rs.next()) {
+                                JOptionPane.showMessageDialog(faculty, "✅ Login successful!");
+                                faculty.setVisible(false);
+                                FacultyDashboard.facDashboard(faculty);
+                            } else {
+                                JOptionPane.showMessageDialog(faculty, "❌ Invalid credentials.", "Login Failed", JOptionPane.ERROR_MESSAGE);
+                            }
+
+                            rs.close();
+                            stmt.close();
+                            con.close();
+                        }else{
+                            JOptionPane.showMessageDialog(faculty, "🚫 Database connection failed.", "Error", JOptionPane.ERROR_MESSAGE);
+                        }
+                    }catch(Exception ex) {
+                        ex.printStackTrace();
+                        JOptionPane.showMessageDialog(faculty, "⚠️ An error occurred.", "Error", JOptionPane.ERROR_MESSAGE);
+                    }
                 }
             }
         });
@@ -173,7 +203,7 @@ public class FacultyLogin {
         JLabel terms = new JLabel("<html><a href=''>Terms of Use</a> and </html>");
         terms.setFont(new Font("Roboto", Font.PLAIN, 12));
         terms.setBackground(Color.decode("#0000EE"));
-        terms.setCursor(new Cursor(Cursor.HAND_CURSOR)); 
+        terms.setCursor(new Cursor(Cursor.HAND_CURSOR));
         JLabel statement = new JLabel("<html><a href=''>Privacy Statement</a></html>");
         statement.setFont(new Font("Roboto", Font.PLAIN, 12));
         statement.setBackground(Color.decode("#0000EE"));
@@ -221,7 +251,7 @@ public class FacultyLogin {
                     ex.printStackTrace();
                 }
             }
-        });        
+        });
 
         //Container to store elements vertically
         JPanel loginPanel = new JPanel();
@@ -237,7 +267,7 @@ public class FacultyLogin {
         loginPanel.add(footnote);
 
         topPanel.add(imageLabel);
-        topPanel.add(Box.createVerticalStrut(10)); 
+        topPanel.add(Box.createVerticalStrut(10));
         topPanel.add(title);
         topPanel.add(instruct);
 
