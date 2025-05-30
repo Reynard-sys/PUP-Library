@@ -6,7 +6,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 public class StudentBooks {
-    public static void studBook(JFrame studentDashboard)
+    public static void studBook(JFrame studentLibrary)
     {
         JFrame studentBook = new JFrame();
         studentBook.getContentPane().setBackground(Color.decode("#f4f6f9"));
@@ -107,7 +107,7 @@ public class StudentBooks {
         buttonPanel.setBounds(60, 25, 460, 40);
 
 
-        buttonPanel.add(wrapButton("Dashboard", studentBook, StudentDashboard.class));
+        buttonPanel.add(wrapButton("Library", studentBook, StudentLibrary.class));
         buttonPanel.add(createDivider());
         buttonPanel.add(wrapButton("My Books", studentBook, StudentBooks.class));
         buttonPanel.add(createDivider());
@@ -122,7 +122,7 @@ public class StudentBooks {
         contentPanel.setBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, Color.BLACK));
 
         JPanel mainPanel = new JPanel();
-        mainPanel.setSize(new Dimension(studentDashboard.getWidth(), 500));
+        mainPanel.setSize(new Dimension(studentLibrary.getWidth(), 500));
         mainPanel.setBackground(Color.decode("#f4f6f9"));
         mainPanel.setLayout(new BorderLayout());
         mainPanel.setOpaque(true);
@@ -165,7 +165,7 @@ public class StudentBooks {
         choices.setBorder(BorderFactory.createEmptyBorder());
         choices.setBorderPainted(false);
 
-        if (label == "Dashboard")
+        if (label == "Library")
         {
             choices.setHorizontalAlignment(SwingConstants.RIGHT); 
         }
@@ -199,10 +199,10 @@ public class StudentBooks {
         choices.addActionListener(e -> {
             try 
             {
-                if (frameClass == StudentDashboard.class)
+                if (frameClass == StudentLibrary.class)
                 {
                     studentBook.setVisible(false); 
-                    StudentDashboard.studDashboard(studentBook);
+                    StudentLibrary.studLibrary(studentBook);
                 }
                 else if (frameClass == StudentHistory.class) 
                 {

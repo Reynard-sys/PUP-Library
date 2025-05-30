@@ -6,7 +6,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 public class StudentHistory {
-    public static void studHistory(JFrame studentDashboard)
+    public static void studHistory(JFrame studentLibrary)
     {
         JFrame studentHistory = new JFrame();
         studentHistory.getContentPane().setBackground(Color.decode("#f4f6f9"));
@@ -107,7 +107,7 @@ public class StudentHistory {
         buttonPanel.setBounds(60, 25, 460, 40);
 
 
-        buttonPanel.add(wrapButton("Dashboard", studentHistory, StudentDashboard.class));
+        buttonPanel.add(wrapButton("Library", studentHistory, StudentLibrary.class));
         buttonPanel.add(createDivider());
         buttonPanel.add(wrapButton("My Books", studentHistory, StudentBooks.class));
         buttonPanel.add(createDivider());
@@ -122,7 +122,7 @@ public class StudentHistory {
         contentPanel.setBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, Color.BLACK));
 
         JPanel mainPanel = new JPanel();
-        mainPanel.setSize(new Dimension(studentDashboard.getWidth(), 500));
+        mainPanel.setSize(new Dimension(studentLibrary.getWidth(), 500));
         mainPanel.setBackground(Color.decode("#f4f6f9"));
         mainPanel.setLayout(new BorderLayout());
         mainPanel.setOpaque(true);
@@ -165,7 +165,7 @@ public class StudentHistory {
         choices.setBorder(BorderFactory.createEmptyBorder());
         choices.setBorderPainted(false);
 
-        if (label == "Dashboard")
+        if (label == "Library")
         {
             choices.setHorizontalAlignment(SwingConstants.RIGHT); 
         }
@@ -200,10 +200,10 @@ public class StudentHistory {
         choices.addActionListener(e -> {
             try 
             {
-                if (frameClass == StudentDashboard.class)
+                if (frameClass == StudentLibrary.class)
                 {
                     studentHistory.setVisible(false); 
-                    StudentDashboard.studDashboard(studentHistory);
+                    StudentLibrary.studLibrary(studentHistory);
                 }
                 else if (frameClass == StudentBooks.class) 
                 {

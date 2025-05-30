@@ -233,7 +233,7 @@ public class StudentLogin {
                 else 
                 {
                     student.setVisible(false);
-                    StudentDashboard.studDashboard(student);
+                    StudentLibrary.studLibrary(student);
 
                     try{
                         Connection con = DBConnection.connect();
@@ -249,7 +249,7 @@ public class StudentLogin {
 
                              if (rs.next()) {
                                 JOptionPane.showMessageDialog(student, "✅ Login successful!");
-                               // TODO: Navigate to next screen or dashboard
+                               // TODO: Navigate to next screen or Library
                              } else {
                                   JOptionPane.showMessageDialog(student, "❌ Invalid credentials.", "Login Failed", JOptionPane.ERROR_MESSAGE);
                              }

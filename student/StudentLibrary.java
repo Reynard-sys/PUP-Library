@@ -5,20 +5,20 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
-public class StudentDashboard {
-    public static void studDashboard(JFrame student)
+public class StudentLibrary {
+    public static void studLibrary(JFrame student)
     {
         //Main Frame Creation
-        JFrame studentDashboard = new JFrame();
-        studentDashboard.getContentPane().setBackground(Color.decode("#f4f6f9"));
-        studentDashboard.setTitle("PUP Library System/student/Dashboard/");
-        studentDashboard.setSize(600,600);
-        studentDashboard.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        studentDashboard.setResizable(false);
+        JFrame studentLibrary = new JFrame();
+        studentLibrary.getContentPane().setBackground(Color.decode("#f4f6f9"));
+        studentLibrary.setTitle("PUP Library System/student/Library/");
+        studentLibrary.setSize(600,600);
+        studentLibrary.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        studentLibrary.setResizable(false);
 
         //Container for logo, title, and drop menu
         JPanel headerPanel = new JPanel();
-        headerPanel.setSize(new Dimension(studentDashboard.getWidth(), 70));
+        headerPanel.setSize(new Dimension(studentLibrary.getWidth(), 70));
         headerPanel.setBackground(Color.WHITE);
         headerPanel.setBorder(BorderFactory.createMatteBorder(1, 0, 1, 0, Color.BLACK));
         headerPanel.setLayout(new BorderLayout());
@@ -74,7 +74,7 @@ public class StudentDashboard {
         //When sign out is clicked, it will relaunch from landing page
         sign_out.addActionListener(e -> 
         {
-            studentDashboard.dispose(); 
+            studentLibrary.dispose(); 
             SwingUtilities.invokeLater(() -> Main.main(new String[]{}));
         });
 
@@ -124,11 +124,11 @@ public class StudentDashboard {
         buttonPanel.setBounds(60, 25, 460, 40);
 
 
-        buttonPanel.add(wrapButton("Dashboard", studentDashboard, StudentDashboard.class));
+        buttonPanel.add(wrapButton("Library", studentLibrary, StudentLibrary.class));
         buttonPanel.add(createDivider());
-        buttonPanel.add(wrapButton("My Books", studentDashboard, StudentBooks.class));
+        buttonPanel.add(wrapButton("My Books", studentLibrary, StudentBooks.class));
         buttonPanel.add(createDivider());
-        buttonPanel.add(wrapButton("History", studentDashboard, StudentHistory.class));
+        buttonPanel.add(wrapButton("History", studentLibrary, StudentHistory.class));
 
         layeredNav.add(roundedNav, JLayeredPane.DEFAULT_LAYER);
         layeredNav.add(buttonPanel, JLayeredPane.PALETTE_LAYER);
@@ -140,7 +140,7 @@ public class StudentDashboard {
   
 
         JPanel mainPanel = new JPanel();
-        mainPanel.setSize(new Dimension(studentDashboard.getWidth(), 500));
+        mainPanel.setSize(new Dimension(studentLibrary.getWidth(), 500));
         mainPanel.setBackground(Color.decode("#f4f6f9"));
         mainPanel.setLayout(new BorderLayout());
         mainPanel.setOpaque(true);
@@ -153,26 +153,26 @@ public class StudentDashboard {
         headerPanel.add(title, BorderLayout.CENTER);
         headerPanel.add(dropDown, BorderLayout.EAST);
 
-        studentDashboard.setLayout(new BorderLayout());
-        studentDashboard.add(headerPanel, BorderLayout.NORTH);
-        studentDashboard.add(mainPanel, BorderLayout.CENTER);
-        studentDashboard.setLocationRelativeTo(null);
-        studentDashboard.setVisible(true);
+        studentLibrary.setLayout(new BorderLayout());
+        studentLibrary.add(headerPanel, BorderLayout.NORTH);
+        studentLibrary.add(mainPanel, BorderLayout.CENTER);
+        studentLibrary.setLocationRelativeTo(null);
+        studentLibrary.setVisible(true);
 
     }
 
-    private static JPanel wrapButton(String label, JFrame studentDashboard, Class<?> frameClass) 
+    private static JPanel wrapButton(String label, JFrame studentLibrary, Class<?> frameClass) 
     {
         JPanel wrapper = new JPanel(new BorderLayout());
         wrapper.setOpaque(false);
 
-        JButton btn = createMenuButton(label, studentDashboard, frameClass);
+        JButton btn = createMenuButton(label, studentLibrary, frameClass);
         wrapper.add(btn, BorderLayout.CENTER);
 
         return wrapper;
     }
 
-    private static JButton createMenuButton(String label, JFrame studentDashboard, Class<?> frameClass)
+    private static JButton createMenuButton(String label, JFrame studentLibrary, Class<?> frameClass)
     {
         JButton choices = new JButton(label);
         choices.setForeground(Color.WHITE);
@@ -183,7 +183,7 @@ public class StudentDashboard {
         choices.setBorder(BorderFactory.createEmptyBorder());
         choices.setBorderPainted(false);
 
-        if (label == "Dashboard")
+        if (label == "Library")
         {
             choices.setHorizontalAlignment(SwingConstants.RIGHT); 
             choices.setForeground(Color.decode("#fede07"));
@@ -198,7 +198,7 @@ public class StudentDashboard {
         {
             choices.setHorizontalAlignment(SwingConstants.LEFT); 
         }
-        else if (label != "Dashboard")
+        else if (label != "Library")
         {
             choices.addMouseListener(new MouseAdapter() 
             {
@@ -224,13 +224,13 @@ public class StudentDashboard {
 
                 if (frameClass == StudentBooks.class)
                 {
-                    studentDashboard.setVisible(false); 
-                    StudentBooks.studBook(studentDashboard);
+                    studentLibrary.setVisible(false); 
+                    StudentBooks.studBook(studentLibrary);
                 }
                 else if (frameClass == StudentHistory.class) 
                 {
-                    studentDashboard.setVisible(false); 
-                    StudentHistory.studHistory(studentDashboard);
+                    studentLibrary.setVisible(false); 
+                    StudentHistory.studHistory(studentLibrary);
                 }
 
             } catch (Exception ex) {
