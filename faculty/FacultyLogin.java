@@ -15,6 +15,7 @@ import java.sql.ResultSet;
 public class FacultyLogin {
     static String faculty_user;
     static String faculty_password;
+    static int login_attempt = 0;
     public static void window(JFrame landing)
     {
         //Student Login Frame Creation
@@ -182,7 +183,23 @@ public class FacultyLogin {
                                 faculty.setVisible(false);
                                 FacultyDashboard.facDashboard(faculty);
                             } else {
-                                JOptionPane.showMessageDialog(faculty, "❌ Invalid credentials.", "Login Failed", JOptionPane.ERROR_MESSAGE);
+                                login_attempt ++;
+                                int attemptsRemaining = 3 - login_attempt;
+                                JOptionPane.showMessageDialog
+                                (
+                                    faculty,
+                                    "Incorrect login credentials (Attempt/s remaining: " + attemptsRemaining + ")",
+                                    "Alert!", JOptionPane.ERROR_MESSAGE
+                                );
+                                if (login_attempt >= 3)
+                                {
+                                    JOptionPane.showMessageDialog
+                                    (
+                                        faculty, "Oops! Maximum log in attempts exceeded.\nClosing program.",
+                                        "Alert!", JOptionPane.ERROR_MESSAGE
+                                    );
+                                    System.exit(0);
+                                }
                             }
 
                             rs.close();
