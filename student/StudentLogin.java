@@ -16,6 +16,7 @@ public class StudentLogin {
     static String student_number;
     static String student_password;
 
+    static int login_attempt = 0;
     public static void window(JFrame landing)
     {
         //Student Login Frame Creation
@@ -130,7 +131,7 @@ public class StudentLogin {
         monthInput.setForeground(Color.BLACK);
         monthInput.setSelectedIndex(0);
         monthInput.setPreferredSize(new Dimension(202, 40));
-        String month = (String) monthInput.getSelectedItem();
+        monthInput.getSelectedItem();
 
         String[] days = new String[32];
         days[0] = "Birth Day";
@@ -144,7 +145,7 @@ public class StudentLogin {
         dayInput.setForeground(Color.BLACK);
         dayInput.setSelectedIndex(0);
         dayInput.setPreferredSize(new Dimension(100, 40));
-        String day = (String) dayInput.getSelectedItem();
+        dayInput.getSelectedItem();
 
         String[] years = new String[117];
         years[0] = "Birth Year";
@@ -161,7 +162,7 @@ public class StudentLogin {
         yearInput.setForeground(Color.BLACK);
         yearInput.setSelectedIndex(0);
         yearInput.setPreferredSize(new Dimension(150, 40));
-        String year = (String) yearInput.getSelectedItem();
+        yearInput.getSelectedItem();
 
 
         Font buttonFont = new Font("Poppins", Font.PLAIN, 18);
@@ -180,8 +181,8 @@ public class StudentLogin {
             {
                 student_number = studentID.getText();
                 String birthdate = yearInput.getSelectedItem() + "-" +
-                   String.format("%02d", monthInput.getSelectedIndex()) + "-" +
-                   String.format("%02d", Integer.parseInt((String) dayInput.getSelectedItem()));
+                String.format("%02d", monthInput.getSelectedIndex()) + "-" +
+                String.format("%02d", Integer.parseInt((String) dayInput.getSelectedItem()));
                 student_password = String.valueOf(password.getPassword());
 
                 boolean isPasswordPlaceholder = student_password.equals("Password");
@@ -230,16 +231,13 @@ public class StudentLogin {
                         "Alert!", JOptionPane.WARNING_MESSAGE
                     );
                 }
-                else 
+                else
                 {
-                    student.setVisible(false);
-                    StudentLibrary.studLibrary(student);
-
                     try{
                         Connection con = DBConnection.connect();
                         if(con != null){
                             PreparedStatement stmt = con.prepareStatement(
-                                "SELECT * FROM studentlogin WHERE username=? and birthdate=? and pass=?"
+                                "SELECT * FROM student_login WHERE username=? and birthdate=? and pass=?"
                             );
                             stmt.setString(1, student_number);
                             stmt.setString(2, birthdate);
@@ -247,16 +245,33 @@ public class StudentLogin {
 
                             ResultSet rs = stmt.executeQuery();
 
-                             if (rs.next()) {
+                            if (rs.next()) {
                                 JOptionPane.showMessageDialog(student, "✅ Login successful!");
-                               // TODO: Navigate to next screen or Library
-                             } else {
-                                  JOptionPane.showMessageDialog(student, "❌ Invalid credentials.", "Login Failed", JOptionPane.ERROR_MESSAGE);
-                             }
+                                student.setVisible(false);
+                                StudentLibrary.studLibrary(student);
+                            } else {
+                                login_attempt ++;
+                                int attemptsRemaining = 3 - login_attempt;
+                                JOptionPane.showMessageDialog
+                                (
+                                    student,
+                                    "Incorrect login credentials (Attempt/s remaining: " + attemptsRemaining + ")",
+                                    "Alert!", JOptionPane.ERROR_MESSAGE
+                                );
+                                if (login_attempt >= 3)
+                                {
+                                    JOptionPane.showMessageDialog
+                                    (
+                                        student, "Oops! Maximum log in attempts exceeded.\nClosing program.",
+                                        "Alert!", JOptionPane.ERROR_MESSAGE
+                                    );
+                                    System.exit(0);
+                                }
+                            }
 
-                             rs.close();
-                             stmt.close();
-                             con.close();
+                            rs.close();
+                            stmt.close();
+                            con.close();
                         }else{
                             JOptionPane.showMessageDialog(student, "🚫 Database connection failed.", "Error", JOptionPane.ERROR_MESSAGE);
                         }
