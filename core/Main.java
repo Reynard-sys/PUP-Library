@@ -102,7 +102,27 @@ public class Main
         JButton faculty = createStyledButton("Faculty", buttonFont, buttonSize);
         faculty.setBackground(Color.decode("#d63f4a"));
         faculty.setAlignmentX(Component.CENTER_ALIGNMENT);
+        
+        //Hover effect to Student Button
+        student.addMouseListener(new MouseAdapter() {
+            public void mouseEntered(MouseEvent e) {
+                student.setBackground(Color.decode("#0D47A1"));
+            }
+            public void mouseExited(MouseEvent e) {
+                student.setBackground(Color.decode("#257cf6"));
+            }
+        });
 
+        //Hover effect to Faculty Button
+        faculty.addMouseListener(new MouseAdapter() {
+            public void mouseEntered(MouseEvent e) {
+                faculty.setBackground(Color.decode("#B71C1C"));
+            }
+            public void mouseExited(MouseEvent e) {
+                faculty.setBackground(Color.decode("#d63f4a"));
+            }
+        });
+        
         //Hyperlink creation
         JLabel terms = new JLabel("<html><a href=''>Terms of Use</a> and </html>");
         terms.setFont(new Font("Roboto", Font.PLAIN, 12));

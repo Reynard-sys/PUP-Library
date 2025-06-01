@@ -55,7 +55,7 @@ public class FacultyLogin {
         instruct.setHorizontalAlignment(SwingConstants.CENTER);
         instruct.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        //Input box for Student Number
+        //Input box for User Name
         JTextField userName = new JTextField("User Name");
         userName.setForeground(Color.GRAY);
         userName.setFont(new Font("Roboto", Font.PLAIN, 15));
@@ -123,6 +123,16 @@ public class FacultyLogin {
         UIManager.put("OptionPane.background", Color.decode("#dc3546"));
         UIManager.put("Panel.background", Color.decode("#dc3546"));
         UIManager.put("OptionPane.messageForeground", Color.WHITE);
+
+        sign_in.addMouseListener(new MouseAdapter() {
+            public void mouseEntered(MouseEvent e) {
+                sign_in.setBackground(Color.decode("#0D47A1"));
+            }
+            public void mouseExited(MouseEvent e) {
+                sign_in.setBackground(Color.decode("#257cf6"));
+            }
+        });
+
         sign_in.addActionListener(new ActionListener() 
         {
             @Override
@@ -171,7 +181,7 @@ public class FacultyLogin {
                         Connection con = DBConnection.connect();
                         if(con != null){
                             PreparedStatement stmt = con.prepareStatement(
-                                "SELECT * FROM faculty_login WHERE username=? and pass=?"
+                                "SELECT * FROM facultylogin WHERE username=? and password=?"
                             );
                             stmt.setString(1, faculty_user);
                             stmt.setString(2, faculty_password);
