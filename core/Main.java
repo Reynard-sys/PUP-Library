@@ -122,7 +122,7 @@ public class Main
                 faculty.setBackground(Color.decode("#d63f4a"));
             }
         });
-        
+
         //Hyperlink creation
         JLabel terms = new JLabel("<html><a href=''>Terms of Use</a> and </html>");
         terms.setFont(new Font("Roboto", Font.PLAIN, 12));
@@ -185,6 +185,16 @@ public class Main
         faculty.addActionListener(e -> {
             landing.setVisible(false);
             FacultyLogin.window(landing);
+        });
+
+        //When PUP logo clicked, it will return to the landing page
+        student.addActionListener(e -> {
+            landing.dispose();
+            new StudentLogin();
+        });
+        faculty.addActionListener(e -> {
+            landing.dispose();
+            new FacultyLogin();
         });
 
         //Adding of elements in the type container

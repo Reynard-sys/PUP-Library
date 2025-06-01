@@ -31,8 +31,9 @@ public class StudentLogin {
 
         //PUP Logo
         ImageIcon logo = new ImageIcon(new ImageIcon("assets/pup.png").getImage().getScaledInstance(60, 60, Image.SCALE_SMOOTH));
-        JLabel imageLabel = new JLabel(logo);
-        imageLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        JLabel logoLabel = new JLabel(logo);
+        logoLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        logoLabel.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
         //Container for top elements
         JPanel topPanel = new JPanel();
@@ -183,7 +184,7 @@ public class StudentLogin {
                 sign_in.setBackground(Color.decode("#257cf6"));
             }
         });
-        
+
         sign_in.addActionListener(new ActionListener() 
         {
             @Override
@@ -347,6 +348,15 @@ public class StudentLogin {
             }
         });
 
+        //Adding MouseListener to go to the landing page when clicked
+        logoLabel.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                student.dispose();
+                Main.main(null);
+            }
+        });
+
         //Container to store elements horizontally
         JPanel birth = new JPanel();
         birth.setPreferredSize(new Dimension(500, 40));
@@ -375,7 +385,7 @@ public class StudentLogin {
         loginPanel.add(Box.createVerticalStrut(20));
         loginPanel.add(footnote);
 
-        topPanel.add(imageLabel);
+        topPanel.add(logoLabel);
         topPanel.add(Box.createVerticalStrut(10)); 
         topPanel.add(title);
         topPanel.add(instruct);

@@ -28,11 +28,12 @@ public class FacultyLogin {
         faculty.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         faculty.setResizable(false);
 
-
+        
         //PUP Logo
         ImageIcon logo = new ImageIcon(new ImageIcon("assets/pup.png").getImage().getScaledInstance(60, 60, Image.SCALE_SMOOTH));
-        JLabel imageLabel = new JLabel(logo);
-        imageLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        JLabel logoLabel = new JLabel(logo);
+        logoLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        logoLabel.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
         //Container for top elements
         JPanel topPanel = new JPanel();
@@ -280,6 +281,15 @@ public class FacultyLogin {
             }
         });
 
+        //Adding MouseListener to go to the landing page when clicked
+        logoLabel.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                faculty.dispose();
+                Main.main(null);
+            }
+        });
+
         //Container to store elements vertically
         JPanel loginPanel = new JPanel();
         loginPanel.setLayout(new BoxLayout(loginPanel, BoxLayout.Y_AXIS));
@@ -293,7 +303,7 @@ public class FacultyLogin {
         loginPanel.add(Box.createVerticalStrut(20));
         loginPanel.add(footnote);
 
-        topPanel.add(imageLabel);
+        topPanel.add(logoLabel);
         topPanel.add(Box.createVerticalStrut(10));
         topPanel.add(title);
         topPanel.add(instruct);
