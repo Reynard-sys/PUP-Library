@@ -4,6 +4,15 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.net.URI;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.awt.Component;
+import javax.swing.table.TableCellRenderer;
+
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.DefaultTableModel;
 
 public class StudentLibrary {
     public static void studLibrary(JFrame student)
@@ -137,7 +146,81 @@ public class StudentLibrary {
         contentPanel.setBounds(9, 90, 565, 375); // Adjusting position manually
         contentPanel.setBackground(Color.decode("#ebebeb"));
         contentPanel.setBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, Color.BLACK));
-  
+        
+        String[] columns = {"Book Title", "Publication Year", "Author", "ISBN", "Total Copies", "Available Copies", "Language"};
+        DefaultTableModel model = new DefaultTableModel(columns, 0);
+
+
+    try {
+        Connection con = DBConnection.connect();
+        String sql = "SELECT * FROM book ORDER BY book_title ASC";
+        PreparedStatement stmt = con.prepareStatement(sql);
+        ResultSet rs = stmt.executeQuery();
+
+        while (rs.next()) {
+        String[] row = {
+            rs.getString("book_title"),
+            String.valueOf(rs.getInt("publication_year")),
+            rs.getString("book_author"),
+            rs.getString("isbn_number"),
+            String.valueOf(rs.getInt("total_copies")),
+            String.valueOf(rs.getInt("available_copies")),
+            rs.getString("language")
+        };
+            model.addRow(row);
+        }
+
+        rs.close();
+        stmt.close();
+        con.close();
+
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+
+	JTable table = new JTable(model) {
+    @Override
+    public boolean isCellEditable(int row, int column) {
+        return false;
+    }
+};
+
+table.getColumnModel().getColumn(0).setCellRenderer(new MultiLineCellRenderer()); // Book Title
+table.getColumnModel().getColumn(2).setCellRenderer(new MultiLineCellRenderer()); // Author
+
+// Appearance improvements
+table.setFillsViewportHeight(true);
+table.setRowHeight(35);
+table.setShowGrid(true);
+table.setGridColor(Color.LIGHT_GRAY);
+table.getTableHeader().setReorderingAllowed(false);
+
+// Optional: Center-align column content
+DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+centerRenderer.setHorizontalAlignment(SwingConstants.CENTER);
+table.getColumnModel().getColumn(1).setCellRenderer(centerRenderer);
+table.getColumnModel().getColumn(4).setCellRenderer(centerRenderer);
+table.getColumnModel().getColumn(5).setCellRenderer(centerRenderer);
+
+
+// Optional: Set preferred column widths
+table.getColumnModel().getColumn(0).setPreferredWidth(250);
+table.getColumnModel().getColumn(1).setPreferredWidth(70);
+table.getColumnModel().getColumn(2).setPreferredWidth(180);
+table.getColumnModel().getColumn(3).setPreferredWidth(180);
+table.getColumnModel().getColumn(4).setPreferredWidth(50);
+table.getColumnModel().getColumn(5).setPreferredWidth(50);
+table.getColumnModel().getColumn(6).setPreferredWidth(10);
+
+// Scroll pane setup
+JScrollPane scrollPane = new JScrollPane(table);
+scrollPane.setPreferredSize(new Dimension(565, 375));
+scrollPane.setBorder(BorderFactory.createEmptyBorder());
+
+// Apply layout and add
+contentPanel.setLayout(new BorderLayout());
+contentPanel.add(scrollPane, BorderLayout.CENTER);
+
 
         JPanel mainPanel = new JPanel();
         mainPanel.setSize(new Dimension(studentLibrary.getWidth(), 500));
@@ -146,8 +229,8 @@ public class StudentLibrary {
         mainPanel.setOpaque(true);
         mainPanel.setLayout(null);
 
-        mainPanel.add(layeredNav, BorderLayout.CENTER); 
-        mainPanel.add(contentPanel);    
+        mainPanel.add(layeredNav, BorderLayout.CENTER);
+        mainPanel.add(contentPanel);
 
         headerPanel.add(imageLabel, BorderLayout.WEST);
         headerPanel.add(title, BorderLayout.CENTER);
@@ -258,4 +341,40 @@ public class StudentLibrary {
 
         return dividerPanel;
     }
+
+    static class MultiLineCellRenderer extends JTextArea implements TableCellRenderer {
+        public MultiLineCellRenderer() {
+            setLineWrap(true);
+            setWrapStyleWord(true);
+            setOpaque(true);
+        }
+
+        @Override
+        public Component getTableCellRendererComponent(
+            JTable table, Object value, boolean isSelected,
+            boolean hasFocus, int row, int column) {
+            setText(value != null ? value.toString() : "");
+            setFont(table.getFont());
+
+            if (isSelected) {
+                setBackground(table.getSelectionBackground());
+                setForeground(table.getSelectionForeground());
+            } else {
+                setBackground(table.getBackground());
+                setForeground(table.getForeground());
+            }
+
+            setSize(table.getColumnModel().getColumn(column).getWidth(), getPreferredSize().height);
+            int preferredHeight = getPreferredSize().height;
+
+            if (table.getRowHeight(row) < preferredHeight) {
+                table.setRowHeight(row, preferredHeight);
+            }
+
+            return this;
+        }
+    }
 }
+
+
+

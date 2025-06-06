@@ -182,7 +182,7 @@ public class FacultyLogin {
                         Connection con = DBConnection.connect();
                         if(con != null){
                             PreparedStatement stmt = con.prepareStatement(
-                                "SELECT * FROM facultylogin WHERE username=? and password=?"
+                                "SELECT * FROM faculty_login WHERE username=? and password=?"
                             );
                             stmt.setString(1, faculty_user);
                             stmt.setString(2, faculty_password);

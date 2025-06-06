@@ -248,7 +248,7 @@ public class StudentLogin {
                         Connection con = DBConnection.connect();
                         if(con != null){
                             PreparedStatement stmt = con.prepareStatement(
-                                "SELECT * FROM student_login WHERE username=? and birthdate=? and pass=?"
+                                "SELECT * FROM student_login WHERE student_no=? and birthday=? and password=?"
                             );
                             stmt.setString(1, student_number);
                             stmt.setString(2, birthdate);
