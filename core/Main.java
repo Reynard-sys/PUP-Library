@@ -127,7 +127,7 @@ public class Main
         JLabel terms = new JLabel("<html><a href=''>Terms of Use</a> and </html>");
         terms.setFont(new Font("Roboto", Font.PLAIN, 12));
         terms.setBackground(Color.decode("#0000EE"));
-        terms.setCursor(new Cursor(Cursor.HAND_CURSOR)); 
+        terms.setCursor(new Cursor(Cursor.HAND_CURSOR));
         JLabel statement = new JLabel("<html><a href=''>Privacy Statement</a></html>");
         statement.setFont(new Font("Roboto", Font.PLAIN, 12));
         statement.setBackground(Color.decode("#0000EE"));
