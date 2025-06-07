@@ -17,10 +17,9 @@ import javax.swing.table.DefaultTableModel;
 public class StudentLibrary {
     public static void studLibrary(JFrame student)
     {
-        //Main Frame Creation
         JFrame studentLibrary = new JFrame();
         studentLibrary.getContentPane().setBackground(Color.decode("#f4f6f9"));
-        studentLibrary.setTitle("PUP Library System/student/Library/");
+        studentLibrary.setTitle("PUP Library System/student/Dashboard/");
         studentLibrary.setSize(600,600);
         studentLibrary.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         studentLibrary.setResizable(false);
@@ -104,122 +103,140 @@ public class StudentLibrary {
             }
         });
 
-        JLayeredPane layeredNav = new JLayeredPane();
-        layeredNav.setPreferredSize(new Dimension(600, 80));
-        layeredNav.setBounds(0, 0, 600, 80);
-        layeredNav.setLayout(null); 
+        //Navbar
+        JPanel StudentNav = new JPanel();
+        StudentNav.setLayout(new GridLayout(1, 4));
+        StudentNav.setBounds(0, 0, studentLibrary.getWidth(), 53);
+        StudentNav.setBackground(Color.BLACK);
+        StudentNav.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, Color.BLACK));
+        StudentNav.setOpaque(false);
 
-        JPanel roundedNav = new JPanel()
+        String[] buttonNames = {"Library Books", "Library Visit History"};
+        
+        for (int i = 0; i < 2; i++)
         {
-            protected void paintComponent(Graphics g)
+            JPanel subPanel = new JPanel(new BorderLayout());
+            subPanel.setBackground(Color.decode("#800201"));
+
+            if (i < 2)
             {
-                super.paintComponent(g);
-                Graphics2D g2 = (Graphics2D) g;
-                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-
-                g2.setColor(Color.decode("#800201"));
-                g2.fillRoundRect(0, 0, 485, 53, 50, 50);
-
-                g2.setColor(Color.BLACK);
-                g2.setStroke(new BasicStroke(1));
-                g2.drawRoundRect(0, 0, 485, 53, 50, 50);
+                subPanel.setBorder(BorderFactory.createMatteBorder(0, 0, 0, 2, Color.BLACK));
             }
-        };
-        roundedNav.setBounds(50, 20, 485, 53);
-        roundedNav.setOpaque(false);
+            JButton button = new JButton(buttonNames[i]);
+            button.setBackground(Color.decode("#800201"));
+            button.setForeground(Color.WHITE);
+            button.setFocusPainted(false);
+            button.setFocusable(false);  
+            button.setBorderPainted(false);
+            button.setFocusable(false);
+            subPanel.add(button, BorderLayout.CENTER);
+            button.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
-        JPanel buttonPanel = new JPanel(new GridLayout(1, 3, 0, 0));
-        buttonPanel.setOpaque(false);
-        buttonPanel.setBounds(60, 25, 460, 40);
+            if (button.getText().equals("Library Books")) 
+            {
+                button.setForeground(Color.YELLOW);
+            }
+            StudentNav.add(subPanel);
 
+            button.addActionListener(e -> 
+            {
+                try 
+                {
+                    if (button.getText().equals("Library Visit History")) 
+                    {
+                        studentLibrary.setVisible(false); 
+                        StudentHistory.studHistory(studentLibrary);
+                    }
+                } 
+                catch (Exception ex) 
+                {
+                    ex.printStackTrace();
+                }
+            });
+        }
 
-        buttonPanel.add(wrapButton("Library", studentLibrary, StudentLibrary.class));
-        buttonPanel.add(createDivider());
-        buttonPanel.add(wrapButton("My Books", studentLibrary, StudentBooks.class));
-        buttonPanel.add(createDivider());
-        buttonPanel.add(wrapButton("History", studentLibrary, StudentHistory.class));
-
-        layeredNav.add(roundedNav, JLayeredPane.DEFAULT_LAYER);
-        layeredNav.add(buttonPanel, JLayeredPane.PALETTE_LAYER);
-
+        //Container for the main contents
         JPanel contentPanel = new JPanel();
-        contentPanel.setBounds(9, 90, 565, 375); // Adjusting position manually
+        contentPanel.setBounds(9, 70, 565, 395); // Adjusting position manually
         contentPanel.setBackground(Color.decode("#ebebeb"));
         contentPanel.setBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, Color.BLACK));
-        
-        String[] columns = {"Book Title", "Publication Year", "Author", "ISBN", "Total Copies", "Available Copies", "Language"};
+
+        String[] columns = {"Book Title", "Year", "Author", "ISBN", "Available", "Language"};
         DefaultTableModel model = new DefaultTableModel(columns, 0);
 
 
-    try {
-        Connection con = DBConnection.connect();
-        String sql = "SELECT * FROM book ORDER BY book_title ASC";
-        PreparedStatement stmt = con.prepareStatement(sql);
-        ResultSet rs = stmt.executeQuery();
+        try 
+        {
+            Connection con = DBConnection.connect();
+            String sql = "SELECT * FROM book ORDER BY book_title ASC";
+            PreparedStatement stmt = con.prepareStatement(sql);
+            ResultSet rs = stmt.executeQuery();
 
-        while (rs.next()) {
-        String[] row = {
-            rs.getString("book_title"),
-            String.valueOf(rs.getInt("publication_year")),
-            rs.getString("book_author"),
-            rs.getString("isbn_number"),
-            String.valueOf(rs.getInt("total_copies")),
-            String.valueOf(rs.getInt("available_copies")),
-            rs.getString("language")
-        };
-            model.addRow(row);
+            while (rs.next()) 
+            {
+                String[] row = 
+                {
+                    rs.getString("book_title"),
+                    String.valueOf(rs.getInt("publication_year")),
+                    rs.getString("book_author"),
+                    rs.getString("isbn_number"),
+                    String.valueOf(rs.getInt("available_copies")),
+                    rs.getString("language")
+                };
+                model.addRow(row);
+            }
+            rs.close();
+            stmt.close();
+            con.close();
+        } 
+        catch (Exception e) 
+        {
+            e.printStackTrace();
         }
 
-        rs.close();
-        stmt.close();
-        con.close();
+        JTable table = new JTable(model) 
+        {
+            @Override
+            public boolean isCellEditable(int row, int column) 
+            {
+                return false;
+            }
+        };
 
-    } catch (Exception e) {
-        e.printStackTrace();
-    }
+        table.getColumnModel().getColumn(0).setCellRenderer(new MultiLineCellRenderer()); // Book Title
+        table.getColumnModel().getColumn(2).setCellRenderer(new MultiLineCellRenderer()); // Author
 
-	JTable table = new JTable(model) {
-    @Override
-    public boolean isCellEditable(int row, int column) {
-        return false;
-    }
-};
+        // Appearance improvements
+        table.setFillsViewportHeight(true);
+        table.setRowHeight(35);
+        table.setShowGrid(true);
+        table.setGridColor(Color.LIGHT_GRAY);
+        table.getTableHeader().setReorderingAllowed(false);
 
-table.getColumnModel().getColumn(0).setCellRenderer(new MultiLineCellRenderer()); // Book Title
-table.getColumnModel().getColumn(2).setCellRenderer(new MultiLineCellRenderer()); // Author
-
-// Appearance improvements
-table.setFillsViewportHeight(true);
-table.setRowHeight(35);
-table.setShowGrid(true);
-table.setGridColor(Color.LIGHT_GRAY);
-table.getTableHeader().setReorderingAllowed(false);
-
-// Optional: Center-align column content
-DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
-centerRenderer.setHorizontalAlignment(SwingConstants.CENTER);
-table.getColumnModel().getColumn(1).setCellRenderer(centerRenderer);
-table.getColumnModel().getColumn(4).setCellRenderer(centerRenderer);
-table.getColumnModel().getColumn(5).setCellRenderer(centerRenderer);
+        // Optional: Center-align column content
+        DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+        centerRenderer.setHorizontalAlignment(SwingConstants.CENTER);
+        table.getColumnModel().getColumn(1).setCellRenderer(centerRenderer);
+        table.getColumnModel().getColumn(4).setCellRenderer(centerRenderer);
+        table.getColumnModel().getColumn(5).setCellRenderer(centerRenderer);
 
 
-// Optional: Set preferred column widths
-table.getColumnModel().getColumn(0).setPreferredWidth(250);
-table.getColumnModel().getColumn(1).setPreferredWidth(70);
-table.getColumnModel().getColumn(2).setPreferredWidth(180);
-table.getColumnModel().getColumn(3).setPreferredWidth(180);
-table.getColumnModel().getColumn(4).setPreferredWidth(50);
-table.getColumnModel().getColumn(5).setPreferredWidth(50);
-table.getColumnModel().getColumn(6).setPreferredWidth(10);
+        // Optional: Set preferred column widths
+        table.getColumnModel().getColumn(0).setPreferredWidth(250);
+        table.getColumnModel().getColumn(1).setPreferredWidth(70);
+        table.getColumnModel().getColumn(2).setPreferredWidth(180);
+        table.getColumnModel().getColumn(3).setPreferredWidth(180);
+        table.getColumnModel().getColumn(4).setPreferredWidth(50);
+        table.getColumnModel().getColumn(5).setPreferredWidth(50);
 
-// Scroll pane setup
-JScrollPane scrollPane = new JScrollPane(table);
-scrollPane.setPreferredSize(new Dimension(565, 375));
-scrollPane.setBorder(BorderFactory.createEmptyBorder());
+        // Scroll pane setup
+        JScrollPane scrollPane = new JScrollPane(table);
+        scrollPane.setPreferredSize(new Dimension(565, 375));
+        scrollPane.setBorder(BorderFactory.createEmptyBorder());
 
-// Apply layout and add
-contentPanel.setLayout(new BorderLayout());
-contentPanel.add(scrollPane, BorderLayout.CENTER);
+        // Apply layout and add
+        contentPanel.setLayout(new BorderLayout());
+        contentPanel.add(scrollPane, BorderLayout.CENTER);
 
 
         JPanel mainPanel = new JPanel();
@@ -228,8 +245,7 @@ contentPanel.add(scrollPane, BorderLayout.CENTER);
         mainPanel.setLayout(new BorderLayout());
         mainPanel.setOpaque(true);
         mainPanel.setLayout(null);
-
-        mainPanel.add(layeredNav, BorderLayout.CENTER);
+        mainPanel.add(StudentNav);
         mainPanel.add(contentPanel);
 
         headerPanel.add(imageLabel, BorderLayout.WEST);
@@ -244,104 +260,7 @@ contentPanel.add(scrollPane, BorderLayout.CENTER);
 
     }
 
-    private static JPanel wrapButton(String label, JFrame studentLibrary, Class<?> frameClass) 
-    {
-        JPanel wrapper = new JPanel(new BorderLayout());
-        wrapper.setOpaque(false);
-
-        JButton btn = createMenuButton(label, studentLibrary, frameClass);
-        wrapper.add(btn, BorderLayout.CENTER);
-
-        return wrapper;
-    }
-
-    private static JButton createMenuButton(String label, JFrame studentLibrary, Class<?> frameClass)
-    {
-        JButton choices = new JButton(label);
-        choices.setForeground(Color.WHITE);
-        choices.setFont(new Font("SansSerif", Font.BOLD, 15));
-        choices.setFocusPainted(false);
-        choices.setContentAreaFilled(false);
-        choices.setOpaque(false);
-        choices.setBorder(BorderFactory.createEmptyBorder());
-        choices.setBorderPainted(false);
-
-        if (label == "Library")
-        {
-            choices.setHorizontalAlignment(SwingConstants.RIGHT); 
-            choices.setForeground(Color.decode("#fede07"));
-            
-        }
-        else if (label == "My Books")
-        {
-            choices.setHorizontalAlignment(SwingConstants.CENTER); 
-            
-        }
-        else if (label == "History")
-        {
-            choices.setHorizontalAlignment(SwingConstants.LEFT); 
-        }
-        else if (label != "Library")
-        {
-            choices.addMouseListener(new MouseAdapter() 
-            {
-                public void mouseEntered(MouseEvent e) 
-                {
-                    choices.setForeground(Color.YELLOW);
-                }
-
-                public void mouseExited(MouseEvent e) 
-                {
-                    choices.setForeground(Color.WHITE);
-                }
-            });
-        }
-        
-        choices.setCursor(new Cursor(Cursor.HAND_CURSOR));
-
-        
-
-        choices.addActionListener(e -> {
-            try 
-            {
-
-                if (frameClass == StudentBooks.class)
-                {
-                    studentLibrary.setVisible(false); 
-                    StudentBooks.studBook(studentLibrary);
-                }
-                else if (frameClass == StudentHistory.class) 
-                {
-                    studentLibrary.setVisible(false); 
-                    StudentHistory.studHistory(studentLibrary);
-                }
-
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
-        });
-
-        return choices;
-    }
-
-    private static JPanel createDivider()
-    {
-        JPanel dividerPanel = new JPanel() 
-        {
-            @Override
-            protected void paintComponent(Graphics g) 
-            {
-                super.paintComponent(g);
-                g.setColor(Color.BLACK); // Line color
-                g.fillRect(getWidth()/2 - 1, 0, 2, getHeight()); // Draws a 2px wide vertical line
-            }
-        };
-        dividerPanel.setPreferredSize(new Dimension(4, 50)); // Adjust width & height
-        dividerPanel.setOpaque(false);
-
-        return dividerPanel;
-    }
-
+    
     static class MultiLineCellRenderer extends JTextArea implements TableCellRenderer {
         public MultiLineCellRenderer() {
             setLineWrap(true);

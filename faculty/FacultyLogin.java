@@ -214,7 +214,7 @@ public class FacultyLogin {
                             if (rs.next()) {
                                 JOptionPane.showMessageDialog(faculty, "✅ Login successful!");
                                 faculty.setVisible(false);
-                                FacultyDashboard.facDashboard(faculty);
+                                FacultyBooks.facBooks(faculty);
                             } else {
                                 login_attempt ++;
                                 int attemptsRemaining = 3 - login_attempt;
