@@ -246,7 +246,7 @@ public class StudentLogin {
                         "Alert!", JOptionPane.ERROR_MESSAGE
                     );
                 } 
-                else if (passwordEmpty) 
+                else if (passwordEmpty)
                 {
                     JOptionPane.showMessageDialog
                     (

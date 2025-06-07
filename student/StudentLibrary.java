@@ -1,5 +1,6 @@
 import javax.swing.*;
 import java.awt.*;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -8,11 +9,10 @@ import java.net.URI;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.awt.event.*;
+import java.sql.*;
+import javax.swing.table.*;
 
-import javax.swing.table.TableCellRenderer;
-
-import javax.swing.table.DefaultTableCellRenderer;
-import javax.swing.table.DefaultTableModel;
 
 public class StudentLibrary {
     public static void studLibrary(JFrame student)
@@ -24,7 +24,6 @@ public class StudentLibrary {
         studentLibrary.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         studentLibrary.setResizable(false);
 
-        //Container for logo, title, and drop menu
         JPanel headerPanel = new JPanel();
         headerPanel.setSize(new Dimension(studentLibrary.getWidth(), 70));
         headerPanel.setBackground(Color.WHITE);
@@ -32,77 +31,53 @@ public class StudentLibrary {
         headerPanel.setLayout(new BorderLayout());
         headerPanel.setOpaque(true);
 
-        //PUP Icon
         ImageIcon logo = new ImageIcon(new ImageIcon("assets/pup.png").getImage().getScaledInstance(54, 54, Image.SCALE_SMOOTH));
         JLabel imageLabel = new JLabel(logo);
         imageLabel.setBorder((BorderFactory.createEmptyBorder(8, 8, 8, 0)));
-        imageLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
 
-        //Title
         JLabel title = new JLabel("PUP LIBRARY");
         title.setFont(new Font("Roboto", Font.PLAIN, 23));
         title.setForeground(Color.decode("#800201"));
         title.setBorder((BorderFactory.createEmptyBorder(20, 4, 20, 10)));
         title.setHorizontalAlignment(SwingConstants.LEFT);
-        title.setAlignmentX(Component.LEFT_ALIGNMENT);
 
-        //Creation of drop down menu
         JButton dropDown = new JButton();
         ImageIcon icon = new ImageIcon(new ImageIcon("assets/dropdownBlack.png").getImage().getScaledInstance(25, 25, Image.SCALE_SMOOTH));
         dropDown.setIcon(icon);
         dropDown.setFocusPainted(false);
         dropDown.setBorderPainted(false);
         dropDown.setContentAreaFilled(false);
-        dropDown.setBorder((BorderFactory.createEmptyBorder(20, 10, 20,35)));
+        dropDown.setBorder((BorderFactory.createEmptyBorder(20, 10, 20, 35)));
         dropDown.setHorizontalAlignment(SwingConstants.RIGHT);
-        dropDown.setAlignmentX(Component.RIGHT_ALIGNMENT);
 
-        //Creation of the pop up
         JPopupMenu menu = new JPopupMenu();
         menu.setPreferredSize(new Dimension(170, 60));
         menu.setBackground(Color.WHITE);
-        menu.setBackground(Color.WHITE);
-        UIManager.put("PopupMenu.background", Color.WHITE);
-        UIManager.put("MenuItem.background", Color.WHITE);
         menu.setOpaque(true);
-        menu.setBorder(BorderFactory.createMatteBorder(2, 2, 2, 2, Color.decode("#800201"))); 
+        menu.setBorder(BorderFactory.createMatteBorder(2, 2, 2, 2, Color.decode("#800201")));
 
-        //Notification Item
         JMenuItem notif = new JMenuItem("Notification");
-        ImageIcon notif_icon = new ImageIcon(new ImageIcon("assets/notification.png").getImage().getScaledInstance(25, 25, Image.SCALE_SMOOTH));
-        notif.setIcon(notif_icon);
+        notif.setIcon(new ImageIcon(new ImageIcon("assets/notification.png").getImage().getScaledInstance(25, 25, Image.SCALE_SMOOTH)));
         notif.setPreferredSize(new Dimension(170, 30));
 
-        //Sign out Item
         JMenuItem sign_out = new JMenuItem("Sign out");
-        ImageIcon signout_icon = new ImageIcon(new ImageIcon("assets/logout.png").getImage().getScaledInstance(22, 22, Image.SCALE_SMOOTH));
-        sign_out.setIcon(signout_icon);
+        sign_out.setIcon(new ImageIcon(new ImageIcon("assets/logout.png").getImage().getScaledInstance(22, 22, Image.SCALE_SMOOTH)));
         sign_out.setPreferredSize(new Dimension(170, 30));
 
-        //When sign out is clicked, it will relaunch from landing page
-        sign_out.addActionListener(e -> 
-        {
-            studentLibrary.dispose(); 
+        sign_out.addActionListener(e -> {
+            studentLibrary.dispose();
             SwingUtilities.invokeLater(() -> Main.main(new String[]{}));
         });
 
-        //Black separator line between notif and sign out
         JPanel separatorPanel = new JPanel();
         separatorPanel.setPreferredSize(new Dimension(170, 1));
         separatorPanel.setBackground(Color.BLACK);
 
-        //Adding the elements to the pop up
         menu.add(notif);
         menu.add(separatorPanel);
         menu.add(sign_out);
 
-        //When drop down is clicked, pop up menu will display
-        dropDown.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                menu.show(dropDown, -145, dropDown.getHeight()-20);
-            }
-        });
-
+        dropDown.addActionListener(e -> menu.show(dropDown, -145, dropDown.getHeight() - 20));
         //Navbar
         JPanel StudentNav = new JPanel();
         StudentNav.setLayout(new GridLayout(1, 4));
@@ -155,97 +130,145 @@ public class StudentLibrary {
             });
         }
 
-        //Container for the main contents
-        JPanel contentPanel = new JPanel();
-        contentPanel.setBounds(9, 70, 565, 395); // Adjusting position manually
-        contentPanel.setBackground(Color.decode("#ebebeb"));
-        contentPanel.setBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, Color.BLACK));
-
-        String[] columns = {"Book Title", "Year", "Author", "ISBN", "Available", "Language"};
+        String[] columns = {"Book Title", "Year", "Author", "ISBN", "Available", "Category"};
         DefaultTableModel model = new DefaultTableModel(columns, 0);
 
-
-        try 
-        {
+        try {
             Connection con = DBConnection.connect();
             String sql = "SELECT * FROM book ORDER BY book_title ASC";
             PreparedStatement stmt = con.prepareStatement(sql);
             ResultSet rs = stmt.executeQuery();
 
-            while (rs.next()) 
-            {
-                String[] row = 
-                {
+            while (rs.next()) {
+                String[] row = {
                     rs.getString("book_title"),
                     String.valueOf(rs.getInt("publication_year")),
                     rs.getString("book_author"),
                     rs.getString("isbn_number"),
                     String.valueOf(rs.getInt("available_copies")),
-                    rs.getString("language")
+                    rs.getString("book_category")
                 };
                 model.addRow(row);
             }
+
             rs.close();
             stmt.close();
             con.close();
-        } 
-        catch (Exception e) 
-        {
+
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
-        JTable table = new JTable(model) 
-        {
-            @Override
-            public boolean isCellEditable(int row, int column) 
-            {
+        JTable table = new JTable(model) {
+            public boolean isCellEditable(int row, int column) {
                 return false;
             }
         };
 
+        final TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(model);
+        table.setRowSorter(sorter);
+
         table.getColumnModel().getColumn(0).setCellRenderer(new MultiLineCellRenderer()); // Book Title
         table.getColumnModel().getColumn(2).setCellRenderer(new MultiLineCellRenderer()); // Author
 
-        // Appearance improvements
         table.setFillsViewportHeight(true);
-        table.setRowHeight(35);
+        table.setRowHeight(30);
         table.setShowGrid(true);
         table.setGridColor(Color.LIGHT_GRAY);
         table.getTableHeader().setReorderingAllowed(false);
 
-        // Optional: Center-align column content
         DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
         centerRenderer.setHorizontalAlignment(SwingConstants.CENTER);
         table.getColumnModel().getColumn(1).setCellRenderer(centerRenderer);
         table.getColumnModel().getColumn(4).setCellRenderer(centerRenderer);
         table.getColumnModel().getColumn(5).setCellRenderer(centerRenderer);
 
-
         // Optional: Set preferred column widths
-        table.getColumnModel().getColumn(0).setPreferredWidth(250);
+        table.getColumnModel().getColumn(0).setPreferredWidth(200);
         table.getColumnModel().getColumn(1).setPreferredWidth(70);
         table.getColumnModel().getColumn(2).setPreferredWidth(180);
-        table.getColumnModel().getColumn(3).setPreferredWidth(180);
-        table.getColumnModel().getColumn(4).setPreferredWidth(50);
-        table.getColumnModel().getColumn(5).setPreferredWidth(50);
+        table.getColumnModel().getColumn(3).setPreferredWidth(150);
+        table.getColumnModel().getColumn(4).setPreferredWidth(100);
+        table.getColumnModel().getColumn(5).setPreferredWidth(100);
 
-        // Scroll pane setup
+                //Container for the main contents
+        JPanel contentPanel = new JPanel();
+        contentPanel.setBackground(Color.decode("#ebebeb"));
+        contentPanel.setBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, Color.BLACK));
+        contentPanel.setLayout(new BorderLayout());
+        contentPanel.setBounds(9, 130, 565, 330);
+
+        JPanel searchFilterPanel = new JPanel(new BorderLayout(10, 0));
+        searchFilterPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        searchFilterPanel.setBackground(Color.decode("#f4f6f9"));
+
+        JTextField searchField = new JTextField() {
+            private final String placeholder = "Search book title...";
+
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                if (getText().isEmpty() && !isFocusOwner()) {
+                    Graphics2D g2 = (Graphics2D) g.create();
+                    g2.setFont(getFont().deriveFont(Font.ITALIC));
+                    g2.setColor(Color.GRAY);
+                    Insets insets = getInsets();
+                    g2.drawString(placeholder, insets.left + 5, g.getFontMetrics().getMaxAscent() + insets.top + 2);
+                    g2.dispose();
+                }
+            }
+        };
+        searchField.setPreferredSize(new Dimension(250, 50));
+        searchField.setFont(new Font("SansSerif", Font.PLAIN, 14));
+        searchField.setBorder(BorderFactory.createCompoundBorder(
+            BorderFactory.createLineBorder(Color.GRAY, 1, true), // true = rounded corners
+            BorderFactory.createEmptyBorder(5, 10, 5, 10)
+        ));
+
+        JComboBox<String> categoryFilter = new JComboBox<>(new String[]{"All", "English", "Filipino", "Science", "Math"});
+
+        searchFilterPanel.add(searchField, BorderLayout.CENTER);
+        searchFilterPanel.add(categoryFilter, BorderLayout.EAST);
+
+        Runnable filterAndSort = () -> {
+            String searchText = searchField.getText().trim().toLowerCase();
+            String selectedCategory = ((String) categoryFilter.getSelectedItem()).toLowerCase();
+
+            RowFilter<DefaultTableModel, Object> rf = new RowFilter<>() {
+                public boolean include(Entry<? extends DefaultTableModel, ? extends Object> entry) {
+                    String title = entry.getStringValue(0).toLowerCase(); // Book Title
+                    String category = entry.getStringValue(5).toLowerCase(); // Category
+                    boolean matchesSearch = title.contains(searchText);
+                    boolean matchesCategory = selectedCategory.equals("all") || category.equals(selectedCategory);
+                    return matchesSearch && matchesCategory;
+                }
+            };
+            sorter.setRowFilter(rf);
+        };
+
+        javax.swing.event.DocumentListener docListener = new javax.swing.event.DocumentListener() {
+            public void insertUpdate(javax.swing.event.DocumentEvent e) { filterAndSort.run(); }
+            public void removeUpdate(javax.swing.event.DocumentEvent e) { filterAndSort.run(); }
+            public void changedUpdate(javax.swing.event.DocumentEvent e) { filterAndSort.run(); }
+        };
+        searchField.getDocument().addDocumentListener(docListener);
+
+        categoryFilter.addActionListener(e -> filterAndSort.run());
+
         JScrollPane scrollPane = new JScrollPane(table);
-        scrollPane.setPreferredSize(new Dimension(565, 375));
+        scrollPane.setPreferredSize(new Dimension(565, 385));
         scrollPane.setBorder(BorderFactory.createEmptyBorder());
 
-        // Apply layout and add
-        contentPanel.setLayout(new BorderLayout());
         contentPanel.add(scrollPane, BorderLayout.CENTER);
-
 
         JPanel mainPanel = new JPanel();
         mainPanel.setSize(new Dimension(studentLibrary.getWidth(), 500));
         mainPanel.setBackground(Color.decode("#f4f6f9"));
-        mainPanel.setLayout(new BorderLayout());
-        mainPanel.setOpaque(true);
         mainPanel.setLayout(null);
+
+        searchFilterPanel.setBounds(120, 70, 350, 50);
         mainPanel.add(StudentNav);
+        mainPanel.add(searchFilterPanel);
         mainPanel.add(contentPanel);
 
         headerPanel.add(imageLabel, BorderLayout.WEST);
@@ -257,10 +280,9 @@ public class StudentLibrary {
         studentLibrary.add(mainPanel, BorderLayout.CENTER);
         studentLibrary.setLocationRelativeTo(null);
         studentLibrary.setVisible(true);
-
     }
-
     
+
     static class MultiLineCellRenderer extends JTextArea implements TableCellRenderer {
         public MultiLineCellRenderer() {
             setLineWrap(true);
@@ -268,13 +290,9 @@ public class StudentLibrary {
             setOpaque(true);
         }
 
-        @Override
-        public Component getTableCellRendererComponent(
-            JTable table, Object value, boolean isSelected,
-            boolean hasFocus, int row, int column) {
+        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
             setText(value != null ? value.toString() : "");
             setFont(table.getFont());
-
             if (isSelected) {
                 setBackground(table.getSelectionBackground());
                 setForeground(table.getSelectionForeground());
@@ -282,14 +300,11 @@ public class StudentLibrary {
                 setBackground(table.getBackground());
                 setForeground(table.getForeground());
             }
-
             setSize(table.getColumnModel().getColumn(column).getWidth(), getPreferredSize().height);
             int preferredHeight = getPreferredSize().height;
-
             if (table.getRowHeight(row) < preferredHeight) {
                 table.setRowHeight(row, preferredHeight);
             }
-
             return this;
         }
     }
