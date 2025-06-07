@@ -8,7 +8,7 @@ import java.net.URI;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.awt.Component;
+
 import javax.swing.table.TableCellRenderer;
 
 import javax.swing.table.DefaultTableCellRenderer;

@@ -41,6 +41,28 @@ public class FacultyLogin {
         topPanel.setOpaque(false); 
         topPanel.setBorder(BorderFactory.createEmptyBorder(32, 10, 10, 10));
 
+        ImageIcon backIcon = new ImageIcon(new ImageIcon("assets/bbutton.png").getImage().getScaledInstance(50, 55, Image.SCALE_SMOOTH));
+        JButton backButton = new JButton(backIcon);
+        backButton.setToolTipText("Back");
+        backButton.setContentAreaFilled(false);
+        backButton.setBorderPainted(false);
+        backButton.setFocusPainted(false);
+        backButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
+
+        backButton.addActionListener(e -> {
+            faculty.dispose();  // Correct usage
+            SwingUtilities.invokeLater(() -> Main.main(new String[]{}));
+        });
+
+        JPanel leftHeader = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, -26));
+        leftHeader.setOpaque(false);
+        leftHeader.add(backButton);
+        
+        JPanel headerPanel = new JPanel(new BorderLayout());
+        headerPanel.add(leftHeader, BorderLayout.WEST);
+        headerPanel.setOpaque(false);
+
+
         //Title text
         JLabel title = new JLabel("PUP Library Faculty Module");
         title.setFont(new Font("Poppins", Font.BOLD, 35));
@@ -303,6 +325,7 @@ public class FacultyLogin {
         loginPanel.add(Box.createVerticalStrut(20));
         loginPanel.add(footnote);
 
+        topPanel.add(headerPanel);
         topPanel.add(logoLabel);
         topPanel.add(Box.createVerticalStrut(10));
         topPanel.add(title);
