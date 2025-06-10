@@ -393,9 +393,10 @@ public class FacultyPass {
                                   "Library Visitor's Log",
                                         JOptionPane.INFORMATION_MESSAGE
                                     );
-                                    studentID.setText("");
-                                    studentPassword.setText("");
-                                    descriptionID.setText("");
+                                    resetPlaceholder(studentID, "Student Number");
+                                    resetPasswordField(studentPassword, "Password");
+                                    resetPlaceholder(descriptionID, "Purpose of Visit");
+
                                 }
                             }
                             else {
@@ -405,10 +406,9 @@ public class FacultyPass {
                                     "Incorrect login credentials",
                                     "Alert!", JOptionPane.ERROR_MESSAGE
                                 );
-                                studentID.setText("");
-                                studentPassword.setText("");
-                                descriptionID.setText("");  
-
+                                resetPlaceholder(studentID, "Student Number");
+                                resetPasswordField(studentPassword, "Password");
+                                resetPlaceholder(descriptionID, "Purpose of Visit");
                             }
 
                             rs.close();
@@ -470,4 +470,21 @@ public class FacultyPass {
         button.setFocusPainted(false);
         return button;
     }
+
+    public static void resetPlaceholder(JTextField field, String placeholder) 
+    {
+        field.setText("");
+        if (!field.hasFocus()) 
+        {
+            field.setText(placeholder);
+            field.setForeground(Color.GRAY);
+        }
+    }
+
+    private static void resetPasswordField(JPasswordField field, String placeholder) {
+        field.setEchoChar((char) 0);
+        field.setForeground(Color.GRAY);
+        field.setText(placeholder);
+    }
+
 }

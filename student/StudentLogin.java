@@ -291,6 +291,11 @@ public class StudentLogin {
                                     "Incorrect login credentials (Attempt/s remaining: " + attemptsRemaining + ")",
                                     "Alert!", JOptionPane.ERROR_MESSAGE
                                 );
+                                resetPlaceholder(studentID, "Student Number");
+                                resetPasswordField(password, "Password");
+                                monthInput.setSelectedIndex(0);
+                                dayInput.setSelectedIndex(0);
+                                yearInput.setSelectedIndex(0);
                                 if (login_attempt >= 3)
                                 {
                                     JOptionPane.showMessageDialog
@@ -418,5 +423,21 @@ public class StudentLogin {
         student.add(loginPanel, BorderLayout.SOUTH);
         student.setLocationRelativeTo(null);
         student.setVisible(true);
+    }
+
+    public static void resetPlaceholder(JTextField field, String placeholder) 
+    {
+        field.setText("");
+        if (!field.hasFocus()) 
+        {
+            field.setText(placeholder);
+            field.setForeground(Color.GRAY);
+        }
+    }
+
+    private static void resetPasswordField(JPasswordField field, String placeholder) {
+        field.setEchoChar((char) 0);
+        field.setForeground(Color.GRAY);
+        field.setText(placeholder);
     }
 }

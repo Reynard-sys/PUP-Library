@@ -224,6 +224,8 @@ public class FacultyLogin {
                                     "Incorrect login credentials (Attempt/s remaining: " + attemptsRemaining + ")",
                                     "Alert!", JOptionPane.ERROR_MESSAGE
                                 );
+                                resetPlaceholder(userName, "User Name");
+                                resetPasswordField(password, "Password");
                                 if (login_attempt >= 3)
                                 {
                                     JOptionPane.showMessageDialog
@@ -234,7 +236,6 @@ public class FacultyLogin {
                                     System.exit(0);
                                 }
                             }
-
                             rs.close();
                             stmt.close();
                             con.close();
@@ -336,5 +337,21 @@ public class FacultyLogin {
         faculty.add(loginPanel, BorderLayout.SOUTH);
         faculty.setLocationRelativeTo(null);
         faculty.setVisible(true);
+    }
+
+    public static void resetPlaceholder(JTextField field, String placeholder) 
+    {
+        field.setText("");
+        if (!field.hasFocus()) 
+        {
+            field.setText(placeholder);
+            field.setForeground(Color.GRAY);
+        }
+    }
+
+    private static void resetPasswordField(JPasswordField field, String placeholder) {
+        field.setEchoChar((char) 0);
+        field.setForeground(Color.GRAY);
+        field.setText(placeholder);
     }
 }
