@@ -4,6 +4,12 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.*;
+import javax.swing.table.*;
+
 
 public class StudentHistory {
     public static void studHistory(JFrame studentLibrary)
@@ -151,6 +157,58 @@ public class StudentHistory {
         contentPanel.setBounds(9, 70, 565, 395); // Adjusting position manually
         contentPanel.setBackground(Color.decode("#ebebeb"));
         contentPanel.setBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, Color.BLACK));
+
+        String[] columns = {"Entry Date", "Entry Time", "Purpose"};
+        DefaultTableModel model = new DefaultTableModel(columns, 0);
+
+        try {
+            Connection con = DBConnection.connect();
+
+            String sql = """
+                SELECT lp.entry_date, lp.entry_time, lp.purpose
+                FROM library_physical lp
+                ORDER BY lp.entry_date DESC, lp.entry_time DESC     
+                    """;
+            
+            PreparedStatement stmt = con.prepareStatement(sql);
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                Date entryDate = rs.getDate("entry_date");
+                Time entryTime = rs.getTime("entry_time");
+                String purpose = rs.getString("purpose");
+
+                model.addRow(new Object[]{entryDate, entryTime, purpose});
+            }
+            rs.close();
+            stmt.close();
+            con.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        //table
+        JTable table = new JTable(model);
+        JScrollPane scrollPane = new JScrollPane(table);
+        scrollPane.setPreferredSize(new Dimension(565, 385));
+        scrollPane.setBorder(BorderFactory.createEmptyBorder());
+
+        contentPanel.setLayout(new BorderLayout());
+        contentPanel.add(scrollPane, BorderLayout.CENTER);
+
+        // style
+        table.setFillsViewportHeight(true);
+        table.setRowHeight(35);
+        table.setShowGrid(true);
+        table.setGridColor(Color.LIGHT_GRAY);
+        table.getTableHeader().setReorderingAllowed(false);
+
+        //center align columns
+        DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+        centerRenderer.setHorizontalAlignment(SwingConstants.CENTER);
+        for (int i = 0; i < table.getColumnCount(); i++) {
+            table.getColumnModel().getColumn(i).setCellRenderer(centerRenderer);
+        }
   
         //Container for everything after the header
         JPanel mainPanel = new JPanel();
