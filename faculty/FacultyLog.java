@@ -1,9 +1,14 @@
 import javax.swing.*;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 
 public class FacultyLog {
     public static void facLog(JFrame faculty)
@@ -163,7 +168,67 @@ public class FacultyLog {
         contentPanel.setBounds(9, 70, 565, 395); // Adjusting position manually
         contentPanel.setBackground(Color.decode("#ebebeb"));
         contentPanel.setBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, Color.BLACK));
-  
+
+        //Table column headers
+        String[] columns = {"Student No.", "Student Name", "Entry Date", "Entry Time", "Purpose"};
+        DefaultTableModel model = new DefaultTableModel(columns, 0);
+        JTable table = new JTable(model);
+
+        try {
+            Connection con = DBConnection.connect();
+            String sql = """
+                SELECT sl.student_no, s.student_name, lp.entry_date, lp.entry_time, lp.purpose 
+                FROM library_physical lp
+                JOIN student_login sl ON lp.student_no = sl.student_no
+                JOIN student s ON sl.student_no = s.student_no
+                ORDER BY lp.entry_date DESC, lp.entry_time DESC;
+            """;
+
+            PreparedStatement stmt = con.prepareStatement(sql);
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                String student_no = rs.getString("StudentNo");
+                String student_name = rs.getString("StudentName");
+                String entry_date = rs.getString("EntryDate");
+                String entry_time = rs.getString("EntryTime");
+                String purpose = rs.getString("Purpose");
+
+                model.addRow(new Object[]{student_no, student_name, entry_date, entry_time, purpose});
+            }
+
+            rs.close();
+            stmt.close();
+            con.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        
+        //Scroll pane setup
+        JScrollPane scrollPane = new JScrollPane(table);
+        scrollPane.setPreferredSize(new Dimension(565, 375));
+        scrollPane.setPreferredSize(new Dimension(565, 385));
+        scrollPane.setBorder(BorderFactory.createEmptyBorder());
+
+        contentPanel.setLayout(new BorderLayout());
+        contentPanel.add(scrollPane, BorderLayout.CENTER);
+
+        //Appearance improvements
+        table.setFillsViewportHeight(true);
+        table.setRowHeight(30);
+        table.setShowGrid(true);
+        table.setGridColor(Color.LIGHT_GRAY);
+        table.getTableHeader().setReorderingAllowed(false);
+
+        //Center-align column content
+        DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+        centerRenderer.setHorizontalAlignment(SwingConstants.CENTER);
+        table.getColumnModel().getColumn(0).setCellRenderer(centerRenderer);
+        table.getColumnModel().getColumn(1).setCellRenderer(centerRenderer);
+        table.getColumnModel().getColumn(2).setCellRenderer(centerRenderer);
+        table.getColumnModel().getColumn(3).setCellRenderer(centerRenderer);
+        table.getColumnModel().getColumn(4).setCellRenderer(centerRenderer);
+        
         //Container for everything after the header
         JPanel mainPanel = new JPanel();
         mainPanel.setSize(new Dimension(facultyLog.getWidth(), 500));
