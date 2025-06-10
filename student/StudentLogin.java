@@ -213,9 +213,6 @@ public class StudentLogin {
             public void actionPerformed(ActionEvent e)
             {
                 student_number = studentID.getText();
-                String birthdate = yearInput.getSelectedItem() + "-" +
-                String.format("%02d", monthInput.getSelectedIndex()) + "-" +
-                String.format("%02d", Integer.parseInt((String) dayInput.getSelectedItem()));
                 student_password = String.valueOf(password.getPassword());
 
                 boolean isPasswordPlaceholder = student_password.equals("Password");
@@ -266,6 +263,9 @@ public class StudentLogin {
                 }
                 else
                 {
+                    String birthdate = yearInput.getSelectedItem() + "-" +
+                    String.format("%02d", monthInput.getSelectedIndex()) + "-" +
+                    String.format("%02d", Integer.parseInt((String) dayInput.getSelectedItem()));
                     try{
                         Connection con = DBConnection.connect();
                         if(con != null){

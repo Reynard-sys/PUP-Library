@@ -4,8 +4,16 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
 
 public class FacultyPass {
+    static String student_number;
+    static String student_password;
+    static String purpose;
     public static void facPass(JFrame faculty)
     {
         //Main Frame Creation
@@ -158,6 +166,264 @@ public class FacultyPass {
         contentPanel.setBounds(9, 70, 565, 395); // Adjusting position manually
         contentPanel.setBackground(Color.decode("#ebebeb"));
         contentPanel.setBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, Color.BLACK));
+        contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.Y_AXIS));
+        contentPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        JLabel welcomeLabel = new JLabel("<html><span style='color:black;'>Welcome to </span><span style='color:#800201;'>PUP Library</span></html>", SwingConstants.CENTER);
+        welcomeLabel.setFont(new Font("Roboto", Font.BOLD, 24));
+        welcomeLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        welcomeLabel.setBorder(BorderFactory.createEmptyBorder(30, 0, 10, 0));
+
+        JLabel subText = new JLabel("Log in to record your visit!");
+        subText.setFont(new Font("Roboto", Font.PLAIN, 16));
+        subText.setForeground(Color.DARK_GRAY);
+        subText.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        JPanel inputStudentPanel = new JPanel(new BorderLayout());
+        inputStudentPanel.setMaximumSize(new Dimension(500, 40)); 
+        inputStudentPanel.setBackground(Color.WHITE);
+        inputStudentPanel.setBorder(BorderFactory.createLineBorder(Color.GRAY));
+
+        // Text field
+        JTextField studentID = new JTextField("Student Number");
+        studentID.setForeground(Color.GRAY); 
+        studentID.setFont(new Font("Roboto", Font.PLAIN, 15));
+        studentID.setBorder(null); 
+        inputStudentPanel.add(studentID, BorderLayout.CENTER);
+
+        // Placeholder behavior
+        studentID.addFocusListener(new FocusAdapter() { 
+            @Override
+            public void focusGained(FocusEvent e) {
+                if (studentID.getText().equals("Student Number")) {
+                    studentID.setText("");
+                    studentID.setForeground(Color.BLACK);
+                }
+            }
+            @Override
+            public void focusLost(FocusEvent e) {
+                if (studentID.getText().isEmpty()) {
+                    studentID.setText("Student Number");
+                    studentID.setForeground(Color.GRAY);
+                }
+            }
+        });
+        inputStudentPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        JPanel inputStudentPassword = new JPanel(new BorderLayout());
+        inputStudentPassword.setMaximumSize(new Dimension(500, 40)); 
+        inputStudentPassword.setBackground(Color.WHITE);
+        inputStudentPassword.setBorder(BorderFactory.createLineBorder(Color.GRAY));
+
+        JPasswordField studentPassword = new JPasswordField();
+        studentPassword.setForeground(Color.GRAY); 
+        studentPassword.setFont(new Font("Roboto", Font.PLAIN, 15));
+        studentPassword.setBorder(null); 
+        inputStudentPassword.add(studentPassword, BorderLayout.CENTER);
+
+        // Text field
+        String placeholder = "Password";
+        studentPassword.setEchoChar((char) 0);  // Show text initially (placeholder)
+        studentPassword.setForeground(Color.GRAY);
+        studentPassword.setText(placeholder);
+
+        // Placeholder behavior
+        studentPassword.addFocusListener(new FocusAdapter() {
+            @Override
+            public void focusGained(FocusEvent e)
+            {
+                if (String.valueOf(studentPassword.getPassword()).equals(placeholder))
+                {
+                    studentPassword.setText("");
+                    studentPassword.setEchoChar('•'); 
+                    studentPassword.setForeground(Color.BLACK);
+                }
+            }
+            @Override
+            public void focusLost(FocusEvent e)
+            {
+                if (String.valueOf(studentPassword.getPassword()).isEmpty())
+                {
+                    studentPassword.setEchoChar((char) 0);
+                    studentPassword.setForeground(Color.GRAY);
+                    studentPassword.setText(placeholder);
+                }
+            }
+        });
+        inputStudentPassword.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        JPanel inputDescriptionPanel = new JPanel(new BorderLayout());
+        inputDescriptionPanel.setMaximumSize(new Dimension(500, 40)); // To keep consistent with the text field
+        inputDescriptionPanel.setBackground(Color.WHITE);
+        inputDescriptionPanel.setBorder(BorderFactory.createLineBorder(Color.GRAY));
+
+        // Text field
+        JTextField descriptionID = new JTextField("Purpose of Visit");
+        descriptionID.setForeground(Color.GRAY); 
+        descriptionID.setFont(new Font("Roboto", Font.PLAIN, 15));
+        descriptionID.setBorder(null); // remove default border to blend in
+        inputDescriptionPanel.add(descriptionID, BorderLayout.CENTER);
+
+        // Placeholder behavior
+        descriptionID.addFocusListener(new FocusAdapter() { 
+            @Override
+            public void focusGained(FocusEvent e) {
+                if (descriptionID.getText().equals("Purpose of Visit")) {
+                    descriptionID.setText("");
+                    descriptionID.setForeground(Color.BLACK);
+                }
+            }
+            @Override
+            public void focusLost(FocusEvent e) {
+                if (descriptionID.getText().isEmpty()) {
+                    descriptionID.setText("Purpose of Visit");
+                    descriptionID.setForeground(Color.GRAY);
+                }
+            }
+        });
+        inputDescriptionPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+
+        Font buttonFont = new Font("Poppins", Font.PLAIN, 18);
+        Dimension buttonSize = new Dimension(500, 50);
+
+        JButton study = createStyledButton("Enter Library", buttonFont, buttonSize);
+        study.setBackground(Color.decode("#d63f4a"));
+        study.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        study.addMouseListener(new MouseAdapter() {
+            public void mouseEntered(MouseEvent e) {
+                study.setBackground(Color.decode("#B71C1C"));
+            }
+            public void mouseExited(MouseEvent e) {
+                study.setBackground(Color.decode("#d63f4a"));
+            }
+        });
+
+        study.addActionListener(new ActionListener() 
+        {
+            @Override
+            public void actionPerformed(ActionEvent e)
+            {
+                student_number = studentID.getText();
+                student_password = String.valueOf(studentPassword.getPassword());
+                purpose = descriptionID.getText();
+
+                boolean isPasswordPlaceholder = student_password.equals("Password");
+                boolean isIDPlaceholder = student_number.equals("Student Number");
+                boolean isPurposePlaceholder = purpose.equals("Purpose of Visit");
+
+                boolean idEmpty = student_number.isEmpty() || isIDPlaceholder;
+                boolean passwordEmpty = student_password.isEmpty() || isPasswordPlaceholder;
+                boolean purposeEmpty = purpose.isEmpty() || isPurposePlaceholder;
+
+                if (idEmpty && passwordEmpty)
+                {
+                    JOptionPane.showMessageDialog
+                    (
+                        faculty,
+                        "The Student Number field is required.\n\nThe Password field is required.",
+                        "Alert!", JOptionPane.ERROR_MESSAGE
+                    );
+                }
+                else if (idEmpty)
+                {
+                    JOptionPane.showMessageDialog
+                    (
+                        faculty,
+                        "The Student Number field is required.",
+                        "Alert!", JOptionPane.ERROR_MESSAGE
+                    );
+                }
+                else if (passwordEmpty)
+                {
+                    JOptionPane.showMessageDialog
+                    (
+                        faculty,
+                        "The Password field is required.",
+                        "Alert!", JOptionPane.ERROR_MESSAGE
+                    );
+                }
+                else if (purposeEmpty)
+                {
+                    JOptionPane.showMessageDialog(
+                        faculty, 
+                        "The Purpose of Visit field is required.",
+                        "Alert!", JOptionPane.ERROR_MESSAGE
+                    );
+                }
+                else
+                {
+                    // All fields filled correctly; proceed
+                    try{
+                        Connection con = DBConnection.connect();
+                        if(con != null){
+                            PreparedStatement stmt = con.prepareStatement(
+                                "SELECT * FROM student_login WHERE student_no = ? AND password = ?"
+                            );
+                            stmt.setString(1, student_number);
+                            stmt.setString(2, student_password);
+
+                            ResultSet rs = stmt.executeQuery();
+
+                            if (rs.next()) {
+                                int studentLoginId = rs.getInt("student_login_id");
+                                PreparedStatement getStudentId = con.prepareStatement(
+                                    "SELECT student_id, student_name FROM student WHERE student_login_id = ?"
+                                );
+                                
+                                getStudentId.setInt(1, studentLoginId);
+                                ResultSet studentRs = getStudentId.executeQuery();
+
+                                if (studentRs.next()) {
+                                    int studentId = studentRs.getInt("student_id");
+                                    String name = studentRs.getString("student_name");
+                                    // Step 2: Insert time-in into library_physical table
+                                    PreparedStatement insertLog = con.prepareStatement(
+                                        "INSERT INTO library_physical (student_id, entry_date, entry_time, purpose) VALUES (?, CURDATE(), CURTIME(), ?)"
+                                    );
+                                    insertLog.setInt(1, studentId);
+                                    insertLog.setString(2, purpose); // You can change the purpose if needed
+                                    insertLog.executeUpdate();
+                                    
+                                    JOptionPane.showMessageDialog(
+                                        faculty,
+                                        "<html><div style='text-align: center;'>Welcome, <b>" + name + "</b>!<br>" +
+                                        "You're now logged in.<br>Please follow our library's rules.</div></html>",
+                                  "Library Visitor's Log",
+                                        JOptionPane.INFORMATION_MESSAGE
+                                    );
+                                    studentID.setText("");
+                                    studentPassword.setText("");
+                                    descriptionID.setText("");
+                                }
+                            }
+                            else {
+                                JOptionPane.showMessageDialog
+                                (
+                                    faculty,
+                                    "Incorrect login credentials",
+                                    "Alert!", JOptionPane.ERROR_MESSAGE
+                                );
+                                studentID.setText("");
+                                studentPassword.setText("");
+                                descriptionID.setText("");  
+
+                            }
+
+                            rs.close();
+                            stmt.close();
+                            con.close();
+                        }else{
+                            JOptionPane.showMessageDialog(faculty, "🚫 Database connection failed.", "Error", JOptionPane.ERROR_MESSAGE);
+                        }
+                    }catch(Exception ex) {
+                        ex.printStackTrace();
+                        JOptionPane.showMessageDialog(faculty, "⚠️ An error occurred.", "Error", JOptionPane.ERROR_MESSAGE);
+                    }
+                }
+            }
+        });
   
         //Container for everything after the header
         JPanel mainPanel = new JPanel();
@@ -166,6 +432,19 @@ public class FacultyPass {
         mainPanel.setLayout(new BorderLayout());
         mainPanel.setOpaque(true);
         mainPanel.setLayout(null);
+        
+        
+        contentPanel.add(welcomeLabel);
+        contentPanel.add(subText);
+        contentPanel.add(Box.createVerticalStrut(20)); // spacing
+        contentPanel.add(inputStudentPanel);
+        contentPanel.add(Box.createVerticalStrut(20)); // spacing
+        contentPanel.add(inputStudentPassword);
+        contentPanel.add(Box.createVerticalStrut(20)); // spacing
+        contentPanel.add(inputDescriptionPanel);
+        contentPanel.add(Box.createVerticalStrut(20)); // spacing
+        contentPanel.add(study);
+
 
         mainPanel.add(facultyNav);
         mainPanel.add(contentPanel);    
@@ -179,5 +458,16 @@ public class FacultyPass {
         facultyPass.add(mainPanel, BorderLayout.CENTER);
         facultyPass.setLocationRelativeTo(null);
         facultyPass.setVisible(true);
+    }
+
+    public static JButton createStyledButton(String text, Font font, Dimension size)
+    {
+        JButton button = new JButton(text);
+        button.setFont(font);
+        button.setPreferredSize(size);
+        button.setMaximumSize(size);
+        button.setForeground(Color.WHITE);
+        button.setFocusPainted(false);
+        return button;
     }
 }
