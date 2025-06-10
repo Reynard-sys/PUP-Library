@@ -41,6 +41,28 @@ public class StudentLogin {
         topPanel.setOpaque(false); 
         topPanel.setBorder(BorderFactory.createEmptyBorder(32, 10, 10, 10));
 
+        ImageIcon backIcon = new ImageIcon(new ImageIcon("assets/bbutton.png").getImage().getScaledInstance(50, 55, Image.SCALE_SMOOTH));
+        JButton backButton = new JButton(backIcon);
+        backButton.setToolTipText("Back");
+        backButton.setContentAreaFilled(false);
+        backButton.setBorderPainted(false);
+        backButton.setFocusPainted(false);
+        backButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
+
+        backButton.addActionListener(e -> {
+            student.dispose();  // Correct usage
+            SwingUtilities.invokeLater(() -> Main.main(new String[]{}));
+        });
+
+        JPanel leftHeader = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, -26));
+        leftHeader.setOpaque(false);
+        leftHeader.add(backButton);
+        
+        JPanel headerPanel = new JPanel(new BorderLayout());
+        headerPanel.add(leftHeader, BorderLayout.WEST);
+        headerPanel.setOpaque(false);
+
+        
         //Title text
         JLabel title = new JLabel("PUP Library Student Module");
         title.setFont(new Font("Poppins", Font.BOLD, 35));
@@ -191,9 +213,6 @@ public class StudentLogin {
             public void actionPerformed(ActionEvent e)
             {
                 student_number = studentID.getText();
-                String birthdate = yearInput.getSelectedItem() + "-" +
-                String.format("%02d", monthInput.getSelectedIndex()) + "-" +
-                String.format("%02d", Integer.parseInt((String) dayInput.getSelectedItem()));
                 student_password = String.valueOf(password.getPassword());
 
                 boolean isPasswordPlaceholder = student_password.equals("Password");
@@ -224,7 +243,7 @@ public class StudentLogin {
                         "Alert!", JOptionPane.ERROR_MESSAGE
                     );
                 } 
-                else if (passwordEmpty) 
+                else if (passwordEmpty)
                 {
                     JOptionPane.showMessageDialog
                     (
@@ -244,11 +263,14 @@ public class StudentLogin {
                 }
                 else
                 {
+                    String birthdate = yearInput.getSelectedItem() + "-" +
+                    String.format("%02d", monthInput.getSelectedIndex()) + "-" +
+                    String.format("%02d", Integer.parseInt((String) dayInput.getSelectedItem()));
                     try{
                         Connection con = DBConnection.connect();
                         if(con != null){
                             PreparedStatement stmt = con.prepareStatement(
-                                "SELECT * FROM student_login WHERE username=? and birthdate=? and pass=?"
+                                "SELECT * FROM student_login WHERE student_no=? and birthday=? and password=?"
                             );
                             stmt.setString(1, student_number);
                             stmt.setString(2, birthdate);
@@ -269,6 +291,11 @@ public class StudentLogin {
                                     "Incorrect login credentials (Attempt/s remaining: " + attemptsRemaining + ")",
                                     "Alert!", JOptionPane.ERROR_MESSAGE
                                 );
+                                resetPlaceholder(studentID, "Student Number");
+                                resetPasswordField(password, "Password");
+                                monthInput.setSelectedIndex(0);
+                                dayInput.setSelectedIndex(0);
+                                yearInput.setSelectedIndex(0);
                                 if (login_attempt >= 3)
                                 {
                                     JOptionPane.showMessageDialog
@@ -385,6 +412,7 @@ public class StudentLogin {
         loginPanel.add(Box.createVerticalStrut(20));
         loginPanel.add(footnote);
 
+        topPanel.add(headerPanel);
         topPanel.add(logoLabel);
         topPanel.add(Box.createVerticalStrut(10)); 
         topPanel.add(title);
@@ -395,5 +423,21 @@ public class StudentLogin {
         student.add(loginPanel, BorderLayout.SOUTH);
         student.setLocationRelativeTo(null);
         student.setVisible(true);
+    }
+
+    public static void resetPlaceholder(JTextField field, String placeholder) 
+    {
+        field.setText("");
+        if (!field.hasFocus()) 
+        {
+            field.setText(placeholder);
+            field.setForeground(Color.GRAY);
+        }
+    }
+
+    private static void resetPasswordField(JPasswordField field, String placeholder) {
+        field.setEchoChar((char) 0);
+        field.setForeground(Color.GRAY);
+        field.setText(placeholder);
     }
 }

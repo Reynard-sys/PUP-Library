@@ -103,14 +103,14 @@ public class FacultyBooks {
         facultyNav.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, Color.BLACK));
         facultyNav.setOpaque(false);
 
-        String[] buttonNames = {"Dashboard", "Books", "Library Pass", "Log"};
+        String[] buttonNames = {"Books", "Library Pass", "Log"};
         
-        for (int i = 0; i < 4; i++)
+        for (int i = 0; i < 3; i++)
         {
             JPanel subPanel = new JPanel(new BorderLayout());
             subPanel.setBackground(Color.decode("#800201"));
 
-            if (i < 4)
+            if (i < 3)
             {
                 subPanel.setBorder(BorderFactory.createMatteBorder(0, 0, 0, 2, Color.BLACK));
             }
@@ -144,12 +144,6 @@ public class FacultyBooks {
                         facultyBooks.setVisible(false); 
                         FacultyPass.facPass(facultyBooks);
                     }
-                    else if (button.getText().equals("Dashboard"))
-                    {
-                        facultyBooks.setVisible(false); 
-                        FacultyDashboard.facDashboard(facultyBooks);
-                    }
-
                 } 
                 catch (Exception ex) 
                 {

@@ -7,9 +7,9 @@ public class DBConnection {
         Connection conn = null;
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
-            String url = "jdbc:mysql://localhost:3306/mine";
+            String url = "jdbc:mysql://localhost:3306/library_management_db";
             String user = "root";
-            String pass = "Gap_2025";
+            String pass = "1106";
             conn = DriverManager.getConnection(url, user, pass);
             System.out.println("Connected to database successfully.");
         } catch (ClassNotFoundException | SQLException e) {
