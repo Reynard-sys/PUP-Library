@@ -1,173 +1,197 @@
 import javax.swing.*;
+import javax.swing.table.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.*;
+import java.sql.*;
 
 public class FacultyBooks {
-    public static void facBooks(JFrame faculty)
-    {
-        //Main Frame Creation
+    public static void facBooks(JFrame faculty) {
         JFrame facultyBooks = new JFrame();
         facultyBooks.getContentPane().setBackground(Color.decode("#f4f6f9"));
-        facultyBooks.setTitle("PUP Library System/student/Dashboard/");
-        facultyBooks.setSize(600,600);
+        facultyBooks.setTitle("PUP Library System/faculty/Dashboard/");
+        facultyBooks.setSize(600, 600);
         facultyBooks.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         facultyBooks.setResizable(false);
 
-        //Container for logo, title, and drop menu
-        JPanel headerPanel = new JPanel();
-        headerPanel.setSize(new Dimension(facultyBooks.getWidth(), 70));
+        // Header
+        JPanel headerPanel = new JPanel(new BorderLayout());
         headerPanel.setBackground(Color.WHITE);
         headerPanel.setBorder(BorderFactory.createMatteBorder(1, 0, 1, 0, Color.BLACK));
-        headerPanel.setLayout(new BorderLayout());
-        headerPanel.setOpaque(true);
+        headerPanel.setPreferredSize(new Dimension(facultyBooks.getWidth(), 70));
 
-        //PUP Icon
-        ImageIcon logo = new ImageIcon(new ImageIcon("assets/pup.png").getImage().getScaledInstance(54, 54, Image.SCALE_SMOOTH));
-        JLabel imageLabel = new JLabel(logo);
-        imageLabel.setBorder((BorderFactory.createEmptyBorder(8, 8, 8, 0)));
-        imageLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
+        JLabel imageLabel = new JLabel(new ImageIcon(new ImageIcon("assets/pup.png").getImage().getScaledInstance(54, 54, Image.SCALE_SMOOTH)));
+        imageLabel.setBorder(BorderFactory.createEmptyBorder(8, 8, 8, 0));
 
-        //Title
         JLabel title = new JLabel("PUP LIBRARY");
         title.setFont(new Font("Roboto", Font.PLAIN, 23));
         title.setForeground(Color.decode("#800201"));
-        title.setBorder((BorderFactory.createEmptyBorder(20, 4, 20, 10)));
-        title.setHorizontalAlignment(SwingConstants.LEFT);
-        title.setAlignmentX(Component.LEFT_ALIGNMENT);
+        title.setBorder(BorderFactory.createEmptyBorder(20, 4, 20, 10));
 
-        //Creation of drop down menu
-        JButton dropDown = new JButton();
-        ImageIcon icon = new ImageIcon(new ImageIcon("assets/dropdownBlack.png").getImage().getScaledInstance(25, 25, Image.SCALE_SMOOTH));
-        dropDown.setIcon(icon);
+        JButton dropDown = new JButton(new ImageIcon(new ImageIcon("assets/dropdownBlack.png").getImage().getScaledInstance(25, 25, Image.SCALE_SMOOTH)));
         dropDown.setFocusPainted(false);
         dropDown.setBorderPainted(false);
         dropDown.setContentAreaFilled(false);
-        dropDown.setBorder((BorderFactory.createEmptyBorder(20, 10, 20,35)));
-        dropDown.setHorizontalAlignment(SwingConstants.RIGHT);
-        dropDown.setAlignmentX(Component.RIGHT_ALIGNMENT);
+        dropDown.setBorder(BorderFactory.createEmptyBorder(20, 10, 20, 35));
 
-        //Creation of the pop up
         JPopupMenu menu = new JPopupMenu();
         menu.setPreferredSize(new Dimension(170, 60));
         menu.setBackground(Color.WHITE);
-        menu.setBackground(Color.WHITE);
-        UIManager.put("PopupMenu.background", Color.WHITE);
-        UIManager.put("MenuItem.background", Color.WHITE);
-        menu.setOpaque(true);
-        menu.setBorder(BorderFactory.createMatteBorder(2, 2, 2, 2, Color.decode("#800201"))); 
+        menu.setBorder(BorderFactory.createMatteBorder(2, 2, 2, 2, Color.decode("#800201")));
 
-        //Notification Item
-        JMenuItem notif = new JMenuItem("Notification");
-        ImageIcon notif_icon = new ImageIcon(new ImageIcon("assets/notification.png").getImage().getScaledInstance(25, 25, Image.SCALE_SMOOTH));
-        notif.setIcon(notif_icon);
-        notif.setPreferredSize(new Dimension(170, 30));
+        JMenuItem notif = new JMenuItem("Notification", new ImageIcon(new ImageIcon("assets/notification.png").getImage().getScaledInstance(25, 25, Image.SCALE_SMOOTH)));
+        JMenuItem signOut = new JMenuItem("Sign out", new ImageIcon(new ImageIcon("assets/logout.png").getImage().getScaledInstance(22, 22, Image.SCALE_SMOOTH)));
 
-        //Sign out Item
-        JMenuItem sign_out = new JMenuItem("Sign out");
-        ImageIcon signout_icon = new ImageIcon(new ImageIcon("assets/logout.png").getImage().getScaledInstance(22, 22, Image.SCALE_SMOOTH));
-        sign_out.setIcon(signout_icon);
-        sign_out.setPreferredSize(new Dimension(170, 30));
-
-        //When sign out is clicked, it will relaunch from landing page
-        sign_out.addActionListener(e -> 
-        {
-            facultyBooks.dispose(); 
+        signOut.addActionListener(e -> {
+            facultyBooks.dispose();
             SwingUtilities.invokeLater(() -> Main.main(new String[]{}));
         });
 
-        //Black separator line between notif and sign out
-        JPanel separatorPanel = new JPanel();
-        separatorPanel.setPreferredSize(new Dimension(170, 1));
-        separatorPanel.setBackground(Color.BLACK);
-
-        //Adding the elements to the pop up
+        JPanel separator = new JPanel();
+        separator.setPreferredSize(new Dimension(170, 1));
+        separator.setBackground(Color.BLACK);
         menu.add(notif);
-        menu.add(separatorPanel);
-        menu.add(sign_out);
+        menu.add(separator);
+        menu.add(signOut);
 
-        //When drop down is clicked, pop up menu will display
-        dropDown.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                menu.show(dropDown, -145, dropDown.getHeight()-20);
-            }
-        });
+        dropDown.addActionListener(e -> menu.show(dropDown, -145, dropDown.getHeight() - 20));
 
-        //Navbar
-        JPanel facultyNav = new JPanel();
-        facultyNav.setLayout(new GridLayout(1, 4));
+        JPanel facultyNav = new JPanel(new GridLayout(1, 4));
         facultyNav.setBounds(0, 0, facultyBooks.getWidth(), 53);
         facultyNav.setBackground(Color.BLACK);
-        facultyNav.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, Color.BLACK));
-        facultyNav.setOpaque(false);
 
         String[] buttonNames = {"Books", "Library Pass", "Log"};
-        
-        for (int i = 0; i < 3; i++)
-        {
-            JPanel subPanel = new JPanel(new BorderLayout());
-            subPanel.setBackground(Color.decode("#800201"));
+        for (String name : buttonNames) {
+            JButton btn = new JButton(name);
+            btn.setBackground(Color.decode("#800201"));
+            btn.setForeground(name.equals("Books") ? Color.YELLOW : Color.WHITE);
+            btn.setFocusPainted(false);
+            btn.setBorderPainted(false);
+            btn.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
-            if (i < 3)
-            {
-                subPanel.setBorder(BorderFactory.createMatteBorder(0, 0, 0, 2, Color.BLACK));
-            }
-            JButton button = new JButton(buttonNames[i]);
-            button.setBackground(Color.decode("#800201"));
-            button.setForeground(Color.WHITE);
-            button.setFocusPainted(false);
-            button.setFocusable(false);  
-            button.setBorderPainted(false);
-            button.setFocusable(false);
-            subPanel.add(button, BorderLayout.CENTER);
-            button.setCursor(new Cursor(Cursor.HAND_CURSOR));
-
-            if (button.getText().equals("Books")) 
-            {
-                button.setForeground(Color.YELLOW);
-            }
-            facultyNav.add(subPanel);
-
-            button.addActionListener(e -> 
-            {
-                try 
-                {
-                    if (button.getText().equals("Log"))
-                    {
-                        facultyBooks.setVisible(false); 
-                        FacultyLog.facLog(facultyBooks);
-                    }
-                    else if (button.getText().equals("Library Pass")) 
-                    {
-                        facultyBooks.setVisible(false); 
-                        FacultyPass.facPass(facultyBooks);
-                    }
-                } 
-                catch (Exception ex) 
-                {
-                    ex.printStackTrace();
-                }
+            btn.addActionListener(e -> {
+                facultyBooks.setVisible(false);
+                if (name.equals("Log")) FacultyLog.facLog(facultyBooks);
+                else if (name.equals("Library Pass")) FacultyPass.facPass(facultyBooks);
             });
+
+            JPanel panel = new JPanel(new BorderLayout());
+            panel.setBackground(Color.decode("#800201"));
+            panel.setBorder(BorderFactory.createMatteBorder(0, 0, 0, 2, Color.BLACK));
+            panel.add(btn, BorderLayout.CENTER);
+            facultyNav.add(panel);
         }
 
-        //Container for the main contents
-        JPanel contentPanel = new JPanel();
-        contentPanel.setBounds(9, 70, 565, 395); // Adjusting position manually
+        String[] columns = {"Book Title", "Year", "Author", "ISBN", "Available", "Category", "Delete"};
+        DefaultTableModel model = new DefaultTableModel(columns, 0);
+
+        try (Connection con = DBConnection.connect();
+             PreparedStatement stmt = con.prepareStatement("SELECT * FROM book ORDER BY book_title ASC");
+             ResultSet rs = stmt.executeQuery()) {
+
+            while (rs.next()) {
+                model.addRow(new Object[]{
+                    rs.getString("book_title"),
+                    rs.getInt("publication_year"),
+                    rs.getString("book_author"),
+                    rs.getString("isbn_number"),
+                    rs.getInt("available_copies"),
+                    rs.getString("category"),
+                    "Delete"
+                });
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        JTable table = new JTable(model) {
+            public boolean isCellEditable(int row, int column) {
+                return column == 6;
+            }
+        };
+
+        table.setRowHeight(30);
+        table.setFillsViewportHeight(true);
+        table.setShowGrid(true);
+        table.setGridColor(Color.LIGHT_GRAY);
+        table.getTableHeader().setReorderingAllowed(false);
+
+        TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(model);
+        table.setRowSorter(sorter);
+
+        table.getColumn("Delete").setCellRenderer(new ButtonRenderer());
+        table.getColumn("Delete").setCellEditor(new ButtonEditor(new JCheckBox(), model, table));
+
+        DefaultTableCellRenderer center = new DefaultTableCellRenderer();
+        center.setHorizontalAlignment(SwingConstants.CENTER);
+        table.getColumnModel().getColumn(1).setCellRenderer(center);
+        table.getColumnModel().getColumn(4).setCellRenderer(center);
+        table.getColumnModel().getColumn(5).setCellRenderer(center);
+
+        table.getColumnModel().getColumn(0).setPreferredWidth(200);
+        table.getColumnModel().getColumn(1).setPreferredWidth(50);
+        table.getColumnModel().getColumn(6).setPreferredWidth(60);
+
+        JTextField searchField = new JTextField();
+        JComboBox<String> categoryFilter = new JComboBox<>(new String[]{"All", "English", "Filipino", "Science", "Math"});
+
+        Runnable filterAndSort = () -> {
+            String searchText = searchField.getText().trim().toLowerCase();
+            String selectedCategory = ((String) categoryFilter.getSelectedItem()).toLowerCase();
+            RowFilter<DefaultTableModel, Object> rf = new RowFilter<>() {
+                public boolean include(Entry<? extends DefaultTableModel, ?> entry) {
+                    String title = entry.getStringValue(0).toLowerCase();
+                    String category = entry.getStringValue(5).toLowerCase();
+                    return title.contains(searchText) && (selectedCategory.equals("all") || category.equals(selectedCategory));
+                }
+            };
+            sorter.setRowFilter(rf);
+        };
+
+        searchField.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
+            public void insertUpdate(javax.swing.event.DocumentEvent e) { filterAndSort.run(); }
+            public void removeUpdate(javax.swing.event.DocumentEvent e) { filterAndSort.run(); }
+            public void changedUpdate(javax.swing.event.DocumentEvent e) { filterAndSort.run(); }
+        });
+
+        categoryFilter.addActionListener(e -> filterAndSort.run());
+
+        JPanel searchFilterPanel = new JPanel(new BorderLayout(10, 0));
+        searchFilterPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        searchFilterPanel.setBackground(Color.decode("#f4f6f9"));
+        searchFilterPanel.add(searchField, BorderLayout.CENTER);
+        searchFilterPanel.add(categoryFilter, BorderLayout.EAST);
+
+        JScrollPane scrollPane = new JScrollPane(table);
+        scrollPane.setPreferredSize(new Dimension(565, 385));
+        scrollPane.setBorder(BorderFactory.createEmptyBorder());
+
+        JPanel contentPanel = new JPanel(new BorderLayout());
+        contentPanel.setBounds(9, 130, 565, 330);
         contentPanel.setBackground(Color.decode("#ebebeb"));
         contentPanel.setBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, Color.BLACK));
-  
-        //Container for everything after the header
-        JPanel mainPanel = new JPanel();
+        contentPanel.add(scrollPane, BorderLayout.CENTER);
+
+        ImageIcon addIcon = new ImageIcon(new ImageIcon("assets/add button.png").getImage().getScaledInstance(28, 28, Image.SCALE_SMOOTH));
+        JButton addButton = new JButton(addIcon);
+        addButton.setBounds(480, 70, 35, 50);
+        addButton.setFocusPainted(false);
+        addButton.setBorderPainted(false);
+        addButton.setContentAreaFilled(false);
+        addButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        addButton.setToolTipText("Add Book");
+        addButton.addActionListener(e -> {
+            facultyBooks.setVisible(false);
+            BookInfo.bookInfo(facultyBooks);
+        });
+
+        JPanel mainPanel = new JPanel(null);
         mainPanel.setSize(new Dimension(facultyBooks.getWidth(), 500));
         mainPanel.setBackground(Color.decode("#f4f6f9"));
-        mainPanel.setLayout(new BorderLayout());
-        mainPanel.setOpaque(true);
-        mainPanel.setLayout(null);
-
+        searchFilterPanel.setBounds(120, 70, 350, 50);
+        mainPanel.add(addButton);
         mainPanel.add(facultyNav);
-        mainPanel.add(contentPanel);    
+        mainPanel.add(searchFilterPanel);
+        mainPanel.add(contentPanel);
 
         headerPanel.add(imageLabel, BorderLayout.WEST);
         headerPanel.add(title, BorderLayout.CENTER);
@@ -178,5 +202,72 @@ public class FacultyBooks {
         facultyBooks.add(mainPanel, BorderLayout.CENTER);
         facultyBooks.setLocationRelativeTo(null);
         facultyBooks.setVisible(true);
+    }
+
+    // Button renderer
+    static class ButtonRenderer extends JPanel implements TableCellRenderer {
+        private final JButton deleteButton;
+
+        public ButtonRenderer() {
+            setLayout(new FlowLayout(FlowLayout.CENTER, 0, 0));
+            setOpaque(true);
+            deleteButton = new JButton(new ImageIcon(new ImageIcon("assets/delete button.png").getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH)));
+            deleteButton.setBorderPainted(false);
+            deleteButton.setContentAreaFilled(false);
+            deleteButton.setFocusPainted(false);
+            deleteButton.setOpaque(false);
+            add(deleteButton);
+        }
+
+        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+            setBackground(isSelected ? table.getSelectionBackground() : table.getBackground());
+            return this;
+        }
+    }
+
+    // Button editor
+    static class ButtonEditor extends DefaultCellEditor {
+        private final JButton button;
+        private final JTable table;
+        private final DefaultTableModel model;
+
+        public ButtonEditor(JCheckBox checkBox, DefaultTableModel model, JTable table) {
+            super(checkBox);
+            this.table = table;
+            this.model = model;
+            this.button = new JButton(new ImageIcon(new ImageIcon("assets/delete button.png").getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH)));
+            button.setOpaque(true);
+            button.setBorderPainted(false);
+            button.setContentAreaFilled(false);
+            button.setFocusPainted(false);
+            button.addActionListener(e -> deleteRow(table.getSelectedRow()));
+        }
+
+        private void deleteRow(int row) {
+            if (row >= 0) {
+                String isbn = table.getValueAt(row, 3).toString();
+                int confirm = JOptionPane.showConfirmDialog(table, "Are you sure you want to delete this book?", "Confirm", JOptionPane.YES_NO_OPTION);
+                if (confirm == JOptionPane.YES_OPTION) {
+                    try (Connection con = DBConnection.connect();
+                         PreparedStatement stmt = con.prepareStatement("DELETE FROM book WHERE isbn_number = ?")) {
+                        stmt.setString(1, isbn);
+                        int affected = stmt.executeUpdate();
+                        if (affected > 0) model.removeRow(row);
+                        else JOptionPane.showMessageDialog(table, "Failed to delete book.");
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                        JOptionPane.showMessageDialog(table, "Error deleting book.");
+                    }
+                }
+            }
+        }
+
+        public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
+            return button;
+        }
+
+        public Object getCellEditorValue() {
+            return "";
+        }
     }
 }
