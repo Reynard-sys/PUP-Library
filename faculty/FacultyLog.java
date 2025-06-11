@@ -171,10 +171,10 @@ public class FacultyLog {
         try {
             Connection con = DBConnection.connect();
             String sql = """
-                SELECT sl.student_no, s.student_name, lp.entry_date, lp.entry_time, lp.purpose 
+                SELECT sl.student_no, s.student_name, lp.entry_date, lp.entry_time, lp.purpose
                 FROM library_physical lp
-                JOIN student_login sl ON lp.student_no = sl.student_no
-                JOIN student s ON sl.student_no = s.student_no
+                JOIN student s ON lp.student_id = s.student_id
+                JOIN student_login sl ON s.student_login_id = sl.student_login_id
                 ORDER BY lp.entry_date DESC, lp.entry_time DESC;
             """;
 
@@ -182,11 +182,11 @@ public class FacultyLog {
             ResultSet rs = stmt.executeQuery();
 
             while (rs.next()) {
-                String student_no = rs.getString("StudentNo");
-                String student_name = rs.getString("StudentName");
-                String entry_date = rs.getString("EntryDate");
-                String entry_time = rs.getString("EntryTime");
-                String purpose = rs.getString("Purpose");
+                String student_no = rs.getString("student_no");
+                String student_name = rs.getString("student_name");
+                String entry_date = rs.getString("entry_date");
+                String entry_time = rs.getString("entry_time");
+                String purpose = rs.getString("purpose");
 
                 model.addRow(new Object[]{student_no, student_name, entry_date, entry_time, purpose});
             }
