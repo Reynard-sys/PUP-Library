@@ -94,8 +94,8 @@ public class FacultyBooks {
         DefaultTableModel model = new DefaultTableModel(columns, 0);
 
         try (Connection con = DBConnection.connect();
-             PreparedStatement stmt = con.prepareStatement("SELECT * FROM book ORDER BY book_title ASC");
-             ResultSet rs = stmt.executeQuery()) {
+            PreparedStatement stmt = con.prepareStatement("SELECT * FROM book ORDER BY book_title ASC");
+            ResultSet rs = stmt.executeQuery()) {
 
             while (rs.next()) {
                 model.addRow(new Object[]{
@@ -130,18 +130,33 @@ public class FacultyBooks {
         table.getColumn("Delete").setCellRenderer(new ButtonRenderer());
         table.getColumn("Delete").setCellEditor(new ButtonEditor(new JCheckBox(), model, table));
 
-        DefaultTableCellRenderer center = new DefaultTableCellRenderer();
-        center.setHorizontalAlignment(SwingConstants.CENTER);
-        table.getColumnModel().getColumn(1).setCellRenderer(center);
-        table.getColumnModel().getColumn(4).setCellRenderer(center);
-        table.getColumnModel().getColumn(5).setCellRenderer(center);
+        table.getColumnModel().getColumn(0).setCellRenderer(new MultiLineCellRenderer()); // Book Title
+        table.getColumnModel().getColumn(2).setCellRenderer(new MultiLineCellRenderer()); // Author
 
-        table.getColumnModel().getColumn(0).setPreferredWidth(200);
+        table.setFillsViewportHeight(true);
+        table.setRowHeight(30);
+        table.setShowGrid(true);
+        table.setGridColor(Color.LIGHT_GRAY);
+        table.getTableHeader().setReorderingAllowed(false);
+
+        DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+        centerRenderer.setHorizontalAlignment(SwingConstants.CENTER);
+        table.getColumnModel().getColumn(1).setCellRenderer(centerRenderer);
+        table.getColumnModel().getColumn(3).setCellRenderer(centerRenderer);
+        table.getColumnModel().getColumn(4).setCellRenderer(centerRenderer);
+        table.getColumnModel().getColumn(5).setCellRenderer(centerRenderer);
+
+        // Optional: Set preferred column widths
+        table.getColumnModel().getColumn(0).setPreferredWidth(150);
         table.getColumnModel().getColumn(1).setPreferredWidth(50);
-        table.getColumnModel().getColumn(6).setPreferredWidth(60);
+        table.getColumnModel().getColumn(2).setPreferredWidth(130);
+        table.getColumnModel().getColumn(3).setPreferredWidth(110);
+        table.getColumnModel().getColumn(4).setPreferredWidth(60);
+        table.getColumnModel().getColumn(5).setPreferredWidth(100);
+        table.getColumnModel().getColumn(6).setPreferredWidth(50);
 
         JTextField searchField = new JTextField();
-        JComboBox<String> categoryFilter = new JComboBox<>(new String[]{"All", "English", "Filipino", "Science", "Math"});
+        JComboBox<String> categoryFilter = new JComboBox<>(new String[]{"All", "Computer Science", "Information Systems", "Electronics", "Mathematics"});
 
         Runnable filterAndSort = () -> {
             String searchText = searchField.getText().trim().toLowerCase();
@@ -220,7 +235,7 @@ public class FacultyBooks {
         public ButtonRenderer() {
             setLayout(new FlowLayout(FlowLayout.CENTER, 0, 0));
             setOpaque(true);
-            deleteButton = new JButton(new ImageIcon(new ImageIcon("assets/delete_button.png").getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH)));
+            deleteButton = new JButton(new ImageIcon(new ImageIcon("assets/PUPLIB__1_-removebg-preview.png").getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH)));
             deleteButton.setBorderPainted(false);
             deleteButton.setContentAreaFilled(false);
             deleteButton.setFocusPainted(false);
@@ -246,7 +261,7 @@ public class FacultyBooks {
             this.table = table;
             this.model = model;
 
-            button = new JButton(new ImageIcon(new ImageIcon("assets/delete_button.png").getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH)));
+            button = new JButton(new ImageIcon(new ImageIcon("assets/PUPLIB__1_-removebg-preview.png").getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH)));
             button.setOpaque(false);
             button.setBorderPainted(false);
             button.setContentAreaFilled(false);
@@ -349,4 +364,32 @@ public class FacultyBooks {
         }
     }
 
+
+    static class MultiLineCellRenderer extends JTextArea implements TableCellRenderer {
+        public MultiLineCellRenderer() {
+            setLineWrap(true);
+            setWrapStyleWord(true);
+            setOpaque(true);
+        }
+
+        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+            setText(value != null ? value.toString() : "");
+            setFont(table.getFont());
+            if (isSelected) {
+                setBackground(table.getSelectionBackground());
+                setForeground(table.getSelectionForeground());
+            } else {
+                setBackground(table.getBackground());
+                setForeground(table.getForeground());
+            }
+            setSize(table.getColumnModel().getColumn(column).getWidth(), getPreferredSize().height);
+            int preferredHeight = getPreferredSize().height;
+            if (table.getRowHeight(row) < preferredHeight) {
+                table.setRowHeight(row, preferredHeight);
+            }
+            return this;
+        }
+    }
 }
+
+

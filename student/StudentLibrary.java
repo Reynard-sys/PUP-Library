@@ -150,7 +150,7 @@ public class StudentLibrary {
                     String.valueOf(rs.getInt("publication_year")),
                     rs.getString("book_author"),
                     rs.getString("isbn_number"),
-                    String.valueOf(rs.getInt("available_copies")),
+                    String.valueOf(rs.getInt("total_copies")),
                     rs.getString("book_category")
                 };
                 model.addRow(row);
@@ -185,15 +185,16 @@ public class StudentLibrary {
         DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
         centerRenderer.setHorizontalAlignment(SwingConstants.CENTER);
         table.getColumnModel().getColumn(1).setCellRenderer(centerRenderer);
+        table.getColumnModel().getColumn(3).setCellRenderer(centerRenderer);
         table.getColumnModel().getColumn(4).setCellRenderer(centerRenderer);
         table.getColumnModel().getColumn(5).setCellRenderer(centerRenderer);
 
         // Optional: Set preferred column widths
-        table.getColumnModel().getColumn(0).setPreferredWidth(200);
-        table.getColumnModel().getColumn(1).setPreferredWidth(70);
-        table.getColumnModel().getColumn(2).setPreferredWidth(180);
-        table.getColumnModel().getColumn(3).setPreferredWidth(150);
-        table.getColumnModel().getColumn(4).setPreferredWidth(100);
+        table.getColumnModel().getColumn(0).setPreferredWidth(150);
+        table.getColumnModel().getColumn(1).setPreferredWidth(60);
+        table.getColumnModel().getColumn(2).setPreferredWidth(130);
+        table.getColumnModel().getColumn(3).setPreferredWidth(120);
+        table.getColumnModel().getColumn(4).setPreferredWidth(70);
         table.getColumnModel().getColumn(5).setPreferredWidth(100);
 
                 //Container for the main contents
@@ -230,7 +231,7 @@ public class StudentLibrary {
             BorderFactory.createEmptyBorder(5, 10, 5, 10)
         ));
 
-        JComboBox<String> categoryFilter = new JComboBox<>(new String[]{"All", "English", "Filipino", "Science", "Math"});
+        JComboBox<String> categoryFilter = new JComboBox<>(new String[]{"All", "Computer Science", "Information Systems", "Electronics", "Mathematics"});
 
         searchFilterPanel.add(searchField, BorderLayout.CENTER);
         searchFilterPanel.add(categoryFilter, BorderLayout.EAST);
