@@ -1,4 +1,9 @@
 import javax.swing.*;
+import javax.swing.text.AbstractDocument;
+import javax.swing.text.AttributeSet;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.DocumentFilter;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -83,6 +88,25 @@ public class FacultyLogin {
         userName.setForeground(Color.GRAY);
         userName.setFont(new Font("Roboto", Font.PLAIN, 15));
         userName.setPreferredSize(new Dimension(500, 40));
+
+        ((AbstractDocument) userName.getDocument()).setDocumentFilter(new DocumentFilter() {
+            private final int MAX_CHAR = 12;
+
+            @Override
+            public void insertString(FilterBypass fb, int offset, String string, AttributeSet attr) throws BadLocationException {
+                if ((fb.getDocument().getLength() + string.length()) <= MAX_CHAR) {
+                    super.insertString(fb, offset, string, attr);
+                }
+            }
+
+            @Override
+            public void replace(FilterBypass fb, int offset, int length, String text, AttributeSet attrs) throws BadLocationException {
+                if ((fb.getDocument().getLength() - length + text.length()) <= MAX_CHAR) {
+                    super.replace(fb, offset, length, text, attrs);
+                }
+            }
+        });
+
         userName.addFocusListener(new FocusAdapter() {
             @Override
             public void focusGained(FocusEvent e)
