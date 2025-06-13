@@ -3,8 +3,6 @@ import javax.swing.text.AbstractDocument;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DocumentFilter;
 import javax.swing.text.AttributeSet;
-
-
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -44,7 +42,7 @@ public class StudentLogin {
         //Container for top elements
         JPanel topPanel = new JPanel();
         topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.Y_AXIS));
-        topPanel.setOpaque(false); 
+        topPanel.setOpaque(false);
         topPanel.setBorder(BorderFactory.createEmptyBorder(32, 10, 10, 10));
 
         ImageIcon backIcon = new ImageIcon(new ImageIcon("assets/bbutton.png").getImage().getScaledInstance(50, 55, Image.SCALE_SMOOTH));
@@ -93,7 +91,7 @@ public class StudentLogin {
 
         //Input box for Student Number
         JTextField studentID = new JTextField("Student Number");
-        studentID.setForeground(Color.GRAY); 
+        studentID.setForeground(Color.GRAY);
         studentID.setFont(new Font("Roboto", Font.PLAIN, 15));
         studentID.setPreferredSize(new Dimension(500, 40));
 
@@ -115,7 +113,7 @@ public class StudentLogin {
             }
         });
 
-        studentID.addFocusListener(new FocusAdapter() { 
+        studentID.addFocusListener(new FocusAdapter() {
             @Override
             public void focusGained(FocusEvent e)
             {
@@ -153,7 +151,7 @@ public class StudentLogin {
                 if (String.valueOf(password.getPassword()).equals(placeholder))
                 {
                     password.setText("");
-                    password.setEchoChar('•'); 
+                    password.setEchoChar('•');
                     password.setForeground(Color.BLACK);
                 }
             }
@@ -232,7 +230,7 @@ public class StudentLogin {
             }
         });
 
-        sign_in.addActionListener(new ActionListener() 
+        sign_in.addActionListener(new ActionListener()
         {
             @Override
             public void actionPerformed(ActionEvent e)
@@ -250,7 +248,7 @@ public class StudentLogin {
                 boolean isDayPlaceholder = dayInput.getSelectedItem().equals("Birth Day");
                 boolean isYearPlaceholder = yearInput.getSelectedItem().equals("Birth Year");
 
-                if (idEmpty && passwordEmpty) 
+                if (idEmpty && passwordEmpty)
                 {
                     JOptionPane.showMessageDialog
                     (
@@ -258,8 +256,8 @@ public class StudentLogin {
                         "The Student No. field is required.\n\nThe Password field is required.",
                         "Alert!", JOptionPane.ERROR_MESSAGE
                     );
-                } 
-                else if (idEmpty) 
+                }
+                else if (idEmpty)
                 {
                     JOptionPane.showMessageDialog
                     (
@@ -267,7 +265,7 @@ public class StudentLogin {
                         "The Student No. field is required.",
                         "Alert!", JOptionPane.ERROR_MESSAGE
                     );
-                } 
+                }
                 else if (passwordEmpty)
                 {
                     JOptionPane.showMessageDialog
@@ -350,7 +348,7 @@ public class StudentLogin {
         JLabel terms = new JLabel("<html><a href=''>Terms of Use</a> and </html>");
         terms.setFont(new Font("Roboto", Font.PLAIN, 12));
         terms.setBackground(Color.decode("#0000EE"));
-        terms.setCursor(new Cursor(Cursor.HAND_CURSOR)); 
+        terms.setCursor(new Cursor(Cursor.HAND_CURSOR));
         JLabel statement = new JLabel("<html><a href=''>Privacy Statement</a></html>");
         statement.setFont(new Font("Roboto", Font.PLAIN, 12));
         statement.setBackground(Color.decode("#0000EE"));
@@ -439,7 +437,7 @@ public class StudentLogin {
 
         topPanel.add(headerPanel);
         topPanel.add(logoLabel);
-        topPanel.add(Box.createVerticalStrut(10)); 
+        topPanel.add(Box.createVerticalStrut(10));
         topPanel.add(title);
         topPanel.add(instruct);
 
@@ -450,10 +448,10 @@ public class StudentLogin {
         student.setVisible(true);
     }
 
-    public static void resetPlaceholder(JTextField field, String placeholder) 
+    public static void resetPlaceholder(JTextField field, String placeholder)
     {
         field.setText("");
-        if (!field.hasFocus()) 
+        if (!field.hasFocus())
         {
             field.setText(placeholder);
             field.setForeground(Color.GRAY);

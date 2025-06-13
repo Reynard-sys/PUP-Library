@@ -3,7 +3,6 @@ import javax.swing.text.AbstractDocument;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DocumentFilter;
-
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -43,7 +42,7 @@ public class FacultyLogin {
         //Container for top elements
         JPanel topPanel = new JPanel();
         topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.Y_AXIS));
-        topPanel.setOpaque(false); 
+        topPanel.setOpaque(false);
         topPanel.setBorder(BorderFactory.createEmptyBorder(32, 10, 10, 10));
 
         ImageIcon backIcon = new ImageIcon(new ImageIcon("assets/bbutton.png").getImage().getScaledInstance(50, 55, Image.SCALE_SMOOTH));
@@ -145,7 +144,7 @@ public class FacultyLogin {
                 if (String.valueOf(password.getPassword()).equals(placeholder))
                 {
                     password.setText("");
-                    password.setEchoChar('•'); 
+                    password.setEchoChar('•');
                     password.setForeground(Color.BLACK);
                 }
             }
@@ -180,7 +179,7 @@ public class FacultyLogin {
             }
         });
 
-        sign_in.addActionListener(new ActionListener() 
+        sign_in.addActionListener(new ActionListener()
         {
             @Override
             public void actionPerformed(ActionEvent e)
@@ -363,10 +362,10 @@ public class FacultyLogin {
         faculty.setVisible(true);
     }
 
-    public static void resetPlaceholder(JTextField field, String placeholder) 
+    public static void resetPlaceholder(JTextField field, String placeholder)
     {
         field.setText("");
-        if (!field.hasFocus()) 
+        if (!field.hasFocus())
         {
             field.setText(placeholder);
             field.setForeground(Color.GRAY);

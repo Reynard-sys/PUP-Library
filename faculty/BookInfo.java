@@ -1,13 +1,7 @@
-import javax.management.Notification;
 import javax.swing.*;
 import java.awt.*;
-import java.net.URI;
-import java.awt.event.*;
 import java.sql.*;
-import javax.swing.table.*;
-import java.awt.event.*;
-import java.sql.*;
-import javax.swing.table.*;
+
 
 public class BookInfo {
     public static void bookInfo(JFrame faculty) {
