@@ -43,6 +43,11 @@ public class FacultyBooks {
         JMenuItem notif = new JMenuItem("Notification", new ImageIcon(new ImageIcon("assets/notification.png").getImage().getScaledInstance(25, 25, Image.SCALE_SMOOTH)));
         JMenuItem signOut = new JMenuItem("Sign out", new ImageIcon(new ImageIcon("assets/logout.png").getImage().getScaledInstance(22, 22, Image.SCALE_SMOOTH)));
 
+        notif.addActionListener(e -> {
+            notification.notif();
+            facultyBooks.setEnabled(true); // Disable the main library window
+        });
+
         signOut.addActionListener(e -> {
             facultyBooks.dispose();
             SwingUtilities.invokeLater(() -> Main.main(new String[]{}));
@@ -316,7 +321,21 @@ public class FacultyBooks {
                             JOptionPane.YES_NO_OPTION);
 
                     if (confirm == JOptionPane.YES_OPTION) {
+                        int bookId = -1;
                         try (Connection con = DBConnection.connect()) {
+                            try (PreparedStatement findIdStmt = con.prepareStatement("SELECT book_id FROM book WHERE isbn_number = ?")) {
+                            findIdStmt.setString(1, isbn);
+                            ResultSet rs = findIdStmt.executeQuery();
+                                if (rs.next()) {
+                                    bookId = rs.getInt("book_id");
+                                }
+                                rs.close();
+                            }
+
+                        if (bookId == -1) {
+                            JOptionPane.showMessageDialog(null, "Book ID not found.");
+                            return;
+                        }
                             if (toDelete < totalCopies) {
                                 // Just update the number of copies
                                 try (PreparedStatement stmt = con.prepareStatement("UPDATE book SET total_copies = total_copies - ? WHERE isbn_number = ?")) {
@@ -325,17 +344,28 @@ public class FacultyBooks {
                                     int affected = stmt.executeUpdate();
                                     if (affected > 0) {
                                         table.setValueAt(totalCopies - toDelete, row, 4); // update UI table value
+                                        PreparedStatement insertStmt = con.prepareStatement("INSERT INTO notification (book_id, notification_type, notification_date) VALUES (?, ?, NOW())");
+                                        insertStmt.setInt(1, bookId);
+                                        insertStmt.setString(2, "Deleted " + toDelete + " copy(ies), with ISBN: " + isbn);
+                                        insertStmt.executeUpdate();
+                                        JOptionPane.showMessageDialog(null, "Copies updated successfully.");
                                     } else {
                                         JOptionPane.showMessageDialog(null, "Failed to update copies.");
                                     }
+                                    
                                 }
                             } else {
                                 // Delete entire row
                                 try (PreparedStatement stmt = con.prepareStatement("DELETE FROM book WHERE isbn_number = ?")) {
                                     stmt.setString(1, isbn);
                                     int affected = stmt.executeUpdate();
-                                    if (affected > 0) {
+                                    if (affected >= 0) {
                                         model.removeRow(row);
+                                        PreparedStatement insertStmt = con.prepareStatement("INSERT INTO notification (book_id, notification_type, notification_date) VALUES (?, ?, NOW())");
+                                        insertStmt.setInt(1, bookId);
+                                        insertStmt.setString(2, "Deleted book");
+                                        insertStmt.executeUpdate();
+                                        JOptionPane.showMessageDialog(null, "Book deleted successfully.");
                                     } else {
                                         JOptionPane.showMessageDialog(null, "Failed to delete book.");
                                     }
@@ -389,7 +419,9 @@ public class FacultyBooks {
             }
             return this;
         }
+        
     }
+    
 }
 
 

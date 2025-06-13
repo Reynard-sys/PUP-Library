@@ -76,6 +76,11 @@ public class FacultyLog {
         sign_out.setIcon(signout_icon);
         sign_out.setPreferredSize(new Dimension(170, 30));
 
+        notif.addActionListener(e -> {
+            notification.notif();
+            facultyLog.setEnabled(true); // Disable the main library window
+        });
+
         //When sign out is clicked, it will relaunch from landing page
         sign_out.addActionListener(e -> 
         {

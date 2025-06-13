@@ -4,9 +4,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.*;
 import javax.swing.table.*;
 
@@ -75,6 +72,11 @@ public class StudentHistory {
         ImageIcon signout_icon = new ImageIcon(new ImageIcon("assets/logout.png").getImage().getScaledInstance(22, 22, Image.SCALE_SMOOTH));
         sign_out.setIcon(signout_icon);
         sign_out.setPreferredSize(new Dimension(170, 30));
+
+        notif.addActionListener(e -> {
+            notification.notif();
+            studentHistory.setEnabled(true); // Disable the main library window
+        });
 
         //When sign out is clicked, it will relaunch from landing page
         sign_out.addActionListener(e -> 

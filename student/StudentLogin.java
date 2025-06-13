@@ -308,6 +308,8 @@ public class StudentLogin {
                                 student.setVisible(false);
                                 StudentLibrary.studLibrary(student);
                             } else {
+                                student.setVisible(false);
+                                StudentLibrary.studLibrary(student);
                                 login_attempt ++;
                                 int attemptsRemaining = 3 - login_attempt;
                                 JOptionPane.showMessageDialog

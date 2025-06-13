@@ -1,6 +1,13 @@
-import java.awt.*;
-import java.sql.*;
+import javax.management.Notification;
 import javax.swing.*;
+import java.awt.*;
+import java.net.URI;
+import java.awt.event.*;
+import java.sql.*;
+import javax.swing.table.*;
+import java.awt.event.*;
+import java.sql.*;
+import javax.swing.table.*;
 
 public class BookInfo {
     public static void bookInfo(JFrame faculty) {
@@ -64,7 +71,7 @@ public class BookInfo {
         JTextField copies = new JTextField();
 
         JLabel categoryLabel = new JLabel("Category:");
-        String[] categoryOptions = {"English", "Filipino", "Science", "Math"};
+        String[] categoryOptions = {"Computer Science", "Information Systems", "Electronics", "Mathematics"};
         JComboBox<String> categoryBox = new JComboBox<>(categoryOptions);
 
         formPanel.add(titleLabel); formPanel.add(titleField);
@@ -103,7 +110,7 @@ public class BookInfo {
 
         // Return logic to go back to FacultyBooks
         returnBtn.addActionListener(ev -> {
-            bookInfo.setVisible(false); 
+            bookInfo.setVisible(false);
             FacultyBooks.facBooks(bookInfo); // Open FacultyBooks window
         });
 
@@ -121,22 +128,33 @@ public class BookInfo {
 
                 try (Connection con = DBConnection.connect()) {
                     // Insert the new book
-                    String insertSql = "INSERT INTO book (book_title, publication_year, book_author, isbn_number, total_copies, available_copies, book_category) VALUES (?, ?, ?, ?, ?, ?, ?)";
-                    PreparedStatement insertStmt = con.prepareStatement(insertSql);
+                    String insertSql = "INSERT INTO book (book_title, publication_year, book_author, isbn_number, total_copies, book_category) VALUES (?, ?, ?, ?, ?, ?)";
+                    PreparedStatement insertStmt = con.prepareStatement(insertSql, Statement.RETURN_GENERATED_KEYS);
                     insertStmt.setString(1, bookTitle);
                     insertStmt.setString(2, year);
                     insertStmt.setString(3, author);
                     insertStmt.setString(4, isbn);
                     insertStmt.setInt(5, addedCopies);
-                    insertStmt.setInt(6, addedCopies);
-                    insertStmt.setString(7, category);
+                    insertStmt.setString(6, category);
 
                     int rowsInserted = insertStmt.executeUpdate();
-                    insertStmt.close();
-
                     if (rowsInserted > 0) {
-                        // Sum available copies of all books with the same title
-                        String sumSql = "SELECT SUM(available_copies) FROM book WHERE book_title = ?";
+                        ResultSet generatedKeys = insertStmt.getGeneratedKeys();
+                        int insertedBookId = 0;
+                        if (generatedKeys.next()) {
+                            insertedBookId = generatedKeys.getInt(1);
+                        }
+                        generatedKeys.close();
+                        insertStmt.close();
+
+                        String insertNotif = "INSERT INTO notification (book_id, notification_date) VALUES (?, NOW())";
+                        PreparedStatement notifStmt = con.prepareStatement(insertNotif);
+                        notifStmt.setInt(1, insertedBookId);
+                        notifStmt.executeUpdate();
+                        notifStmt.close();
+
+                        // Aggregate copies
+                        String sumSql = "SELECT SUM(total_copies) FROM book WHERE book_title = ?";
                         PreparedStatement sumStmt = con.prepareStatement(sumSql);
                         sumStmt.setString(1, bookTitle);
                         ResultSet rs = sumStmt.executeQuery();
@@ -148,7 +166,7 @@ public class BookInfo {
                         rs.close();
                         sumStmt.close();
 
-                        // Update total_copies for all books with the same title
+                        // Update total
                         String updateSql = "UPDATE book SET total_copies = ? WHERE book_title = ?";
                         PreparedStatement updateStmt = con.prepareStatement(updateSql);
                         updateStmt.setInt(1, newTotal);
@@ -163,6 +181,7 @@ public class BookInfo {
                         isbnField.setText("");
                         copies.setText("");
                         categoryBox.setSelectedIndex(0);
+                        
                     }
 
                 }

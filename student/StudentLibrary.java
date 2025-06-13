@@ -1,10 +1,6 @@
+import javax.management.Notification;
 import javax.swing.*;
 import java.awt.*;
-
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.net.URI;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -12,12 +8,9 @@ import java.sql.ResultSet;
 import java.awt.event.*;
 import java.sql.*;
 import javax.swing.table.*;
-
-
 import java.awt.event.*;
 import java.sql.*;
 import javax.swing.table.*;
-
 
 public class StudentLibrary {
     public static void studLibrary(JFrame student)
@@ -68,6 +61,11 @@ public class StudentLibrary {
         JMenuItem sign_out = new JMenuItem("Sign out");
         sign_out.setIcon(new ImageIcon(new ImageIcon("assets/logout.png").getImage().getScaledInstance(22, 22, Image.SCALE_SMOOTH)));
         sign_out.setPreferredSize(new Dimension(170, 30));
+
+        notif.addActionListener(e -> {
+            notification.notif();
+            studentLibrary.setEnabled(true); // Disable the main library window
+        });
 
         sign_out.addActionListener(e -> {
             studentLibrary.dispose();
