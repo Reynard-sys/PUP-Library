@@ -17,7 +17,7 @@ public class StudentLibrary {
     {
         JFrame studentLibrary = new JFrame();
         studentLibrary.getContentPane().setBackground(Color.decode("#f4f6f9"));
-        studentLibrary.setTitle("PUP Library System/student/Dashboard/");
+        studentLibrary.setTitle("PUP Library System/student/Library/");
         studentLibrary.setSize(600,600);
         studentLibrary.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         studentLibrary.setResizable(false);

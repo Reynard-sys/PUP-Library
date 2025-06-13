@@ -10,7 +10,7 @@ public class FacultyBooks {
     public static void facBooks(JFrame faculty) {
         JFrame facultyBooks = new JFrame();
         facultyBooks.getContentPane().setBackground(Color.decode("#f4f6f9"));
-        facultyBooks.setTitle("PUP Library System/faculty/Dashboard/");
+        facultyBooks.setTitle("PUP Library System/faculty/Books/");
         facultyBooks.setSize(600, 600);
         facultyBooks.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         facultyBooks.setResizable(false);

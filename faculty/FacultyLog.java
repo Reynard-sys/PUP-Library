@@ -16,7 +16,7 @@ public class FacultyLog {
         //Main Frame Creation
         JFrame facultyLog = new JFrame();
         facultyLog.getContentPane().setBackground(Color.decode("#f4f6f9"));
-        facultyLog.setTitle("PUP Library System/student/Dashboard/");
+        facultyLog.setTitle("PUP Library System/student/Log/");
         facultyLog.setSize(600,600);
         facultyLog.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         facultyLog.setResizable(false);

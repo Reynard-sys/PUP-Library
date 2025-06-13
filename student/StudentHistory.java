@@ -13,7 +13,7 @@ public class StudentHistory {
     {
         JFrame studentHistory = new JFrame();
         studentHistory.getContentPane().setBackground(Color.decode("#f4f6f9"));
-        studentHistory.setTitle("PUP Library System/student/Dashboard/");
+        studentHistory.setTitle("PUP Library System/student/History/");
         studentHistory.setSize(600,600);
         studentHistory.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         studentHistory.setResizable(false);

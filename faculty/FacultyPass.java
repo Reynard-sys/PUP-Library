@@ -19,7 +19,7 @@ public class FacultyPass {
         //Main Frame Creation
         JFrame facultyPass = new JFrame();
         facultyPass.getContentPane().setBackground(Color.decode("#f4f6f9"));
-        facultyPass.setTitle("PUP Library System/student/Dashboard/");
+        facultyPass.setTitle("PUP Library System/student/Pass/");
         facultyPass.setSize(600,600);
         facultyPass.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         facultyPass.setResizable(false);
