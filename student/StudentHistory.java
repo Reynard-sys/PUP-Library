@@ -167,16 +167,10 @@ public class StudentHistory {
             String sql = """
                 SELECT lp.entry_date, lp.entry_time, lp.purpose
                 FROM library_physical lp
-<<<<<<< HEAD
                 WHERE lp.student_id = ?
                 ORDER BY lp.entry_date DESC, lp.entry_time DESC
                 """;
-
-=======
-                ORDER BY lp.entry_date DESC, lp.entry_time DESC
-                    """;
             
->>>>>>> 7017956e3022a049806c416ec28d89c5942f095d
             PreparedStatement stmt = con.prepareStatement(sql);
             stmt.setInt(1, StudentSession.studentId); // Use the logged-in student's ID
             ResultSet rs = stmt.executeQuery();
