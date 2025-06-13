@@ -1,16 +1,10 @@
-import javax.management.Notification;
 import javax.swing.*;
 import java.awt.*;
-import java.net.URI;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.awt.event.*;
-import java.sql.*;
 import javax.swing.table.*;
-import java.awt.event.*;
-import java.sql.*;
-import javax.swing.table.*;
+
 
 public class StudentLibrary {
     public static void studLibrary(JFrame student)
@@ -104,29 +98,29 @@ public class StudentLibrary {
             button.setBackground(Color.decode("#800201"));
             button.setForeground(Color.WHITE);
             button.setFocusPainted(false);
-            button.setFocusable(false);  
+            button.setFocusable(false);
             button.setBorderPainted(false);
             button.setFocusable(false);
             subPanel.add(button, BorderLayout.CENTER);
             button.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
-            if (button.getText().equals("Library Books")) 
+            if (button.getText().equals("Library Books"))
             {
                 button.setForeground(Color.YELLOW);
             }
             StudentNav.add(subPanel);
 
-            button.addActionListener(e -> 
+            button.addActionListener(e ->
             {
-                try 
+                try
                 {
-                    if (button.getText().equals("Library Visit History")) 
+                    if (button.getText().equals("Library Visit History"))
                     {
-                        studentLibrary.setVisible(false); 
+                        studentLibrary.setVisible(false);
                         StudentHistory.studHistory(studentLibrary);
                     }
-                } 
-                catch (Exception ex) 
+                }
+                catch (Exception ex)
                 {
                     ex.printStackTrace();
                 }

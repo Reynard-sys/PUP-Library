@@ -2,8 +2,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.sql.*;
 import javax.swing.table.*;
 
@@ -79,9 +77,9 @@ public class StudentHistory {
         });
 
         //When sign out is clicked, it will relaunch from landing page
-        sign_out.addActionListener(e -> 
+        sign_out.addActionListener(e ->
         {
-            studentHistory.dispose(); 
+            studentHistory.dispose();
             SwingUtilities.invokeLater(() -> Main.main(new String[]{}));
         });
 
@@ -125,7 +123,7 @@ public class StudentHistory {
             button.setBackground(Color.decode("#800201"));
             button.setForeground(Color.WHITE);
             button.setFocusPainted(false);
-            button.setFocusable(false);  
+            button.setFocusable(false);
             button.setBorderPainted(false);
             button.setFocusable(false);
             subPanel.add(button, BorderLayout.CENTER);
@@ -137,17 +135,17 @@ public class StudentHistory {
             }
             StudentNav.add(subPanel);
 
-            button.addActionListener(e -> 
+            button.addActionListener(e ->
             {
-                try 
+                try
                 {
-                    if (button.getText().equals("Library Books")) 
+                    if (button.getText().equals("Library Books"))
                     {
-                        studentHistory.setVisible(false); 
+                        studentHistory.setVisible(false);
                         StudentLibrary.studLibrary(studentHistory);
                     }
-                } 
-                catch (Exception ex) 
+                }
+                catch (Exception ex)
                 {
                     ex.printStackTrace();
                 }
@@ -169,10 +167,16 @@ public class StudentHistory {
             String sql = """
                 SELECT lp.entry_date, lp.entry_time, lp.purpose
                 FROM library_physical lp
+<<<<<<< HEAD
                 WHERE lp.student_id = ?
                 ORDER BY lp.entry_date DESC, lp.entry_time DESC
                 """;
 
+=======
+                ORDER BY lp.entry_date DESC, lp.entry_time DESC
+                    """;
+            
+>>>>>>> 7017956e3022a049806c416ec28d89c5942f095d
             PreparedStatement stmt = con.prepareStatement(sql);
             stmt.setInt(1, StudentSession.studentId); // Use the logged-in student's ID
             ResultSet rs = stmt.executeQuery();
@@ -215,7 +219,7 @@ public class StudentHistory {
         for (int i = 0; i < table.getColumnCount(); i++) {
             table.getColumnModel().getColumn(i).setCellRenderer(centerRenderer);
         }
-  
+
         //Container for everything after the header
         JPanel mainPanel = new JPanel();
         mainPanel.setSize(new Dimension(studentHistory.getWidth(), 500));
@@ -225,7 +229,7 @@ public class StudentHistory {
         mainPanel.setLayout(null);
 
         mainPanel.add(StudentNav);
-        mainPanel.add(contentPanel);    
+        mainPanel.add(contentPanel);
 
         headerPanel.add(imageLabel, BorderLayout.WEST);
         headerPanel.add(title, BorderLayout.CENTER);

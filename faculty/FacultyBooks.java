@@ -1,10 +1,8 @@
 import javax.swing.*;
-import javax.swing.plaf.basic.BasicSliderUI;
 import javax.swing.table.*;
 import java.awt.*;
-import java.awt.event.*;
 import java.sql.*;
-import javax.swing.plaf.basic.BasicSliderUI;
+
 
 public class FacultyBooks {
     public static void facBooks(JFrame faculty) {

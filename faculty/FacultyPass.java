@@ -65,7 +65,7 @@ public class FacultyPass {
         UIManager.put("PopupMenu.background", Color.WHITE);
         UIManager.put("MenuItem.background", Color.WHITE);
         menu.setOpaque(true);
-        menu.setBorder(BorderFactory.createMatteBorder(2, 2, 2, 2, Color.decode("#800201"))); 
+        menu.setBorder(BorderFactory.createMatteBorder(2, 2, 2, 2, Color.decode("#800201")));
 
         //Notification Item
         JMenuItem notif = new JMenuItem("Notification");
@@ -131,35 +131,35 @@ public class FacultyPass {
             button.setBackground(Color.decode("#800201"));
             button.setForeground(Color.WHITE);
             button.setFocusPainted(false);
-            button.setFocusable(false);  
+            button.setFocusable(false);
             button.setBorderPainted(false);
             button.setFocusable(false);
             subPanel.add(button, BorderLayout.CENTER);
             button.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
-            if (button.getText().equals("Library Pass")) 
+            if (button.getText().equals("Library Pass"))
             {
                 button.setForeground(Color.YELLOW);
             }
             facultyNav.add(subPanel);
 
-            button.addActionListener(e -> 
+            button.addActionListener(e ->
             {
-                try 
+                try
                 {
                     if (button.getText().equals("Books"))
                     {
-                        facultyPass.setVisible(false); 
+                        facultyPass.setVisible(false);
                         FacultyBooks.facBooks(facultyPass);
                     }
                     else if (button.getText().equals("Log"))
                     {
-                        facultyPass.setVisible(false); 
+                        facultyPass.setVisible(false);
                         FacultyLog.facLog(facultyPass);
                     }
 
-                } 
-                catch (Exception ex) 
+                }
+                catch (Exception ex)
                 {
                     ex.printStackTrace();
                 }
@@ -185,19 +185,19 @@ public class FacultyPass {
         subText.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         JPanel inputStudentPanel = new JPanel(new BorderLayout());
-        inputStudentPanel.setMaximumSize(new Dimension(500, 40)); 
+        inputStudentPanel.setMaximumSize(new Dimension(500, 40));
         inputStudentPanel.setBackground(Color.WHITE);
         inputStudentPanel.setBorder(BorderFactory.createLineBorder(Color.GRAY));
 
         // Text field
         JTextField studentID = new JTextField("Student Number");
-        studentID.setForeground(Color.GRAY); 
+        studentID.setForeground(Color.GRAY);
         studentID.setFont(new Font("Roboto", Font.PLAIN, 15));
-        studentID.setBorder(null); 
+        studentID.setBorder(null);
         inputStudentPanel.add(studentID, BorderLayout.CENTER);
 
         // Placeholder behavior
-        studentID.addFocusListener(new FocusAdapter() { 
+        studentID.addFocusListener(new FocusAdapter() {
             @Override
             public void focusGained(FocusEvent e) {
                 if (studentID.getText().equals("Student Number")) {
@@ -216,14 +216,14 @@ public class FacultyPass {
         inputStudentPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         JPanel inputStudentPassword = new JPanel(new BorderLayout());
-        inputStudentPassword.setMaximumSize(new Dimension(500, 40)); 
+        inputStudentPassword.setMaximumSize(new Dimension(500, 40));
         inputStudentPassword.setBackground(Color.WHITE);
         inputStudentPassword.setBorder(BorderFactory.createLineBorder(Color.GRAY));
 
         JPasswordField studentPassword = new JPasswordField();
-        studentPassword.setForeground(Color.GRAY); 
+        studentPassword.setForeground(Color.GRAY);
         studentPassword.setFont(new Font("Roboto", Font.PLAIN, 15));
-        studentPassword.setBorder(null); 
+        studentPassword.setBorder(null);
         inputStudentPassword.add(studentPassword, BorderLayout.CENTER);
 
         // Text field
@@ -240,7 +240,7 @@ public class FacultyPass {
                 if (String.valueOf(studentPassword.getPassword()).equals(placeholder))
                 {
                     studentPassword.setText("");
-                    studentPassword.setEchoChar('•'); 
+                    studentPassword.setEchoChar('•');
                     studentPassword.setForeground(Color.BLACK);
                 }
             }
@@ -264,13 +264,13 @@ public class FacultyPass {
 
         // Text field
         JTextField descriptionID = new JTextField("Purpose of Visit");
-        descriptionID.setForeground(Color.GRAY); 
+        descriptionID.setForeground(Color.GRAY);
         descriptionID.setFont(new Font("Roboto", Font.PLAIN, 15));
         descriptionID.setBorder(null); // remove default border to blend in
         inputDescriptionPanel.add(descriptionID, BorderLayout.CENTER);
 
         // Placeholder behavior
-        descriptionID.addFocusListener(new FocusAdapter() { 
+        descriptionID.addFocusListener(new FocusAdapter() {
             @Override
             public void focusGained(FocusEvent e) {
                 if (descriptionID.getText().equals("Purpose of Visit")) {
@@ -305,7 +305,7 @@ public class FacultyPass {
             }
         });
 
-        study.addActionListener(new ActionListener() 
+        study.addActionListener(new ActionListener()
         {
             @Override
             public void actionPerformed(ActionEvent e)
@@ -352,7 +352,7 @@ public class FacultyPass {
                 else if (purposeEmpty)
                 {
                     JOptionPane.showMessageDialog(
-                        faculty, 
+                        faculty,
                         "The Purpose of Visit field is required.",
                         "Alert!", JOptionPane.ERROR_MESSAGE
                     );
@@ -395,7 +395,7 @@ public class FacultyPass {
                                         faculty,
                                         "<html><div style='text-align: center;'>Welcome, <b>" + name + "</b>!<br>" +
                                         "You're now logged in.<br>Please follow our library's rules.</div></html>",
-                                  "Library Visitor's Log",
+                                    "Library Visitor's Log",
                                         JOptionPane.INFORMATION_MESSAGE
                                     );
                                     resetPlaceholder(studentID, "Student Number");
@@ -429,7 +429,7 @@ public class FacultyPass {
                 }
             }
         });
-  
+
         //Container for everything after the header
         JPanel mainPanel = new JPanel();
         mainPanel.setSize(new Dimension(facultyPass.getWidth(), 500));
@@ -452,7 +452,7 @@ public class FacultyPass {
 
 
         mainPanel.add(facultyNav);
-        mainPanel.add(contentPanel);    
+        mainPanel.add(contentPanel);
 
         headerPanel.add(imageLabel, BorderLayout.WEST);
         headerPanel.add(title, BorderLayout.CENTER);
@@ -476,10 +476,10 @@ public class FacultyPass {
         return button;
     }
 
-    public static void resetPlaceholder(JTextField field, String placeholder) 
+    public static void resetPlaceholder(JTextField field, String placeholder)
     {
         field.setText("");
-        if (!field.hasFocus()) 
+        if (!field.hasFocus())
         {
             field.setText(placeholder);
             field.setForeground(Color.GRAY);

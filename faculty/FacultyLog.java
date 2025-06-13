@@ -4,8 +4,6 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -82,9 +80,9 @@ public class FacultyLog {
         });
 
         //When sign out is clicked, it will relaunch from landing page
-        sign_out.addActionListener(e -> 
+        sign_out.addActionListener(e ->
         {
-            facultyLog.dispose(); 
+            facultyLog.dispose();
             SwingUtilities.invokeLater(() -> Main.main(new String[]{}));
         });
 
@@ -128,34 +126,34 @@ public class FacultyLog {
             button.setBackground(Color.decode("#800201"));
             button.setForeground(Color.WHITE);
             button.setFocusPainted(false);
-            button.setFocusable(false);  
+            button.setFocusable(false);
             button.setBorderPainted(false);
             button.setFocusable(false);
             subPanel.add(button, BorderLayout.CENTER);
             button.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
-            if (button.getText().equals("Log")) 
+            if (button.getText().equals("Log"))
             {
                 button.setForeground(Color.YELLOW);
             }
             facultyNav.add(subPanel);
 
-            button.addActionListener(e -> 
+            button.addActionListener(e ->
             {
-                try 
+                try
                 {
                     if (button.getText().equals("Books"))
                     {
-                        facultyLog.setVisible(false); 
+                        facultyLog.setVisible(false);
                         FacultyBooks.facBooks(facultyLog);
                     }
-                    else if (button.getText().equals("Library Pass")) 
+                    else if (button.getText().equals("Library Pass"))
                     {
-                        facultyLog.setVisible(false); 
+                        facultyLog.setVisible(false);
                         FacultyPass.facPass(facultyLog);
                     }
-                } 
-                catch (Exception ex) 
+                }
+                catch (Exception ex)
                 {
                     ex.printStackTrace();
                 }
@@ -237,7 +235,7 @@ public class FacultyLog {
         mainPanel.setLayout(null);
 
         mainPanel.add(facultyNav);
-        mainPanel.add(contentPanel);    
+        mainPanel.add(contentPanel);
 
         headerPanel.add(imageLabel, BorderLayout.WEST);
         headerPanel.add(title, BorderLayout.CENTER);
