@@ -169,10 +169,12 @@ public class StudentHistory {
             String sql = """
                 SELECT lp.entry_date, lp.entry_time, lp.purpose
                 FROM library_physical lp
-                ORDER BY lp.entry_date DESC, lp.entry_time DESC     
-                    """;
-            
+                WHERE lp.student_id = ?
+                ORDER BY lp.entry_date DESC, lp.entry_time DESC
+                """;
+
             PreparedStatement stmt = con.prepareStatement(sql);
+            stmt.setInt(1, StudentSession.studentId); // Use the logged-in student's ID
             ResultSet rs = stmt.executeQuery();
 
             while (rs.next()) {
@@ -182,12 +184,14 @@ public class StudentHistory {
 
                 model.addRow(new Object[]{entryDate, entryTime, purpose});
             }
+
             rs.close();
             stmt.close();
             con.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
+
 
         //table
         JTable table = new JTable(model);

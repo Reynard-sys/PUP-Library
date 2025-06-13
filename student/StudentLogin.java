@@ -294,9 +294,13 @@ public class StudentLogin {
                     try{
                         Connection con = DBConnection.connect();
                         if(con != null){
-                            PreparedStatement stmt = con.prepareStatement(
-                                "SELECT * FROM student_login WHERE student_no=? and birthday=? and password=?"
-                            );
+                            PreparedStatement stmt = con.prepareStatement("""
+                                SELECT s.student_id, sl.student_no
+                                FROM student_login sl
+                                JOIN student s ON sl.student_login_id = s.student_login_id
+                                WHERE sl.student_no = ? AND sl.birthday = ? AND sl.password = ?
+                            """);
+
                             stmt.setString(1, student_number);
                             stmt.setString(2, birthdate);
                             stmt.setString(3, student_password);
@@ -304,6 +308,9 @@ public class StudentLogin {
                             ResultSet rs = stmt.executeQuery();
 
                             if (rs.next()) {
+                                StudentSession.studentId = rs.getInt("student_id"); // Or the correct column name
+                                StudentSession.studentNumber = rs.getString("student_no");
+
                                 JOptionPane.showMessageDialog(student, "✅ Login successful!");
                                 student.setVisible(false);
                                 StudentLibrary.studLibrary(student);
