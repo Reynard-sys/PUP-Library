@@ -240,8 +240,6 @@ public class FacultyLogin {
                                 faculty.setVisible(false);
                                 FacultyBooks.facBooks(faculty);
                             } else {
-                                faculty.setVisible(false);
-                                FacultyBooks.facBooks(faculty);
                                 login_attempt ++;
                                 int attemptsRemaining = 3 - login_attempt;
                                 JOptionPane.showMessageDialog
